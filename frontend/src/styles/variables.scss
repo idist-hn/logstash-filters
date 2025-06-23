@@ -1,0 +1,134 @@
+// CSS Custom Properties for Theme System
+:root {
+  // Brand Colors (không đổi theo theme)
+  --primary-color: #1890ff;
+  --success-color: #52c41a;
+  --warning-color: #faad14;
+  --error-color: #ff4d4f;
+  --info-color: #1890ff;
+  
+  // Light Theme Colors
+  --bg-primary: #ffffff;
+  --bg-secondary: #fafafa;
+  --bg-tertiary: #f5f5f5;
+  --bg-quaternary: #f0f2f5;
+  
+  --text-primary: #262626;
+  --text-secondary: #595959;
+  --text-tertiary: #8c8c8c;
+  --text-disabled: #bfbfbf;
+  --text-inverse: #ffffff;
+  
+  --border-color: #d9d9d9;
+  --border-light: #f0f0f0;
+  --border-secondary: #e8e8e8;
+  
+  --shadow-light: rgba(0, 0, 0, 0.04);
+  --shadow-medium: rgba(0, 0, 0, 0.08);
+  --shadow-heavy: rgba(0, 0, 0, 0.12);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.08);
+  
+  // Header & Sidebar specific
+  --header-bg: #ffffff;
+  --header-border: #f0f0f0;
+  --sidebar-bg: #ffffff;
+  --sidebar-border: #f0f0f0;
+  --sidebar-item-hover: #f5f5f5;
+  --sidebar-item-active: #e6f7ff;
+  
+  // Interactive states
+  --hover-bg: #f5f5f5;
+  --active-bg: #e6f7ff;
+  --focus-outline: rgba(24, 144, 255, 0.2);
+  
+  // Spacing (SCSS variables - không đổi theo theme)
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  
+  // Border radius
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  
+  // Transitions
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
+
+// Dark Theme
+.dark,
+[data-theme="dark"] {
+  --bg-primary: #141414;
+  --bg-secondary: #1f1f1f;
+  --bg-tertiary: #262626;
+  --bg-quaternary: #2f2f2f;
+  
+  --text-primary: #ffffff;
+  --text-secondary: #a6a6a6;
+  --text-tertiary: #737373;
+  --text-disabled: #434343;
+  --text-inverse: #000000;
+  
+  --border-color: #434343;
+  --border-light: #303030;
+  --border-secondary: #3a3a3a;
+  
+  --shadow-light: rgba(0, 0, 0, 0.2);
+  --shadow-medium: rgba(0, 0, 0, 0.3);
+  --shadow-heavy: rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.4);
+  
+  // Header & Sidebar specific
+  --header-bg: #1f1f1f;
+  --header-border: #434343;
+  --sidebar-bg: #1f1f1f;
+  --sidebar-border: #434343;
+  --sidebar-item-hover: #262626;
+  --sidebar-item-active: #111b26;
+  
+  // Interactive states
+  --hover-bg: #262626;
+  --active-bg: #111b26;
+  --focus-outline: rgba(24, 144, 255, 0.4);
+}
+
+// SCSS Variables for static values (không thay đổi theo theme)
+$header-height: 64px;
+$sidebar-width: 256px;
+$sidebar-collapsed-width: 80px;
+
+// Z-index scale
+$z-dropdown: 1000;
+$z-sticky: 1020;
+$z-fixed: 1030;
+$z-modal-backdrop: 1040;
+$z-modal: 1050;
+$z-popover: 1060;
+$z-tooltip: 1070;
+$z-toast: 9999;
+
+// Breakpoints
+$breakpoint-xs: 480px;
+$breakpoint-sm: 768px;
+$breakpoint-md: 992px;
+$breakpoint-lg: 1200px;
+$breakpoint-xl: 1600px;
+
+// Apply smooth transitions to all elements during theme change
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *:before,
+html.theme-transition *:after {
+  transition: background-color var(--transition-normal) !important,
+              color var(--transition-normal) !important,
+              border-color var(--transition-normal) !important,
+              box-shadow var(--transition-normal) !important;
+}

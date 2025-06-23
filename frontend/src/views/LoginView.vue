@@ -249,7 +249,7 @@ checkAuthStatus()
   align-items: center;
   justify-content: center;
   position: relative;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: var(--login-bg, linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%));
 }
 
 /* Simple Background */
@@ -270,13 +270,11 @@ checkAuthStatus()
   z-index: 10;
   width: 100%;
   max-width: 480px;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--login-card-bg, rgba(255, 255, 255, 0.95));
   backdrop-filter: blur(20px);
   border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow:
-    0 20px 40px rgba(0, 0, 0, 0.1),
-    0 8px 16px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--login-card-border, rgba(255, 255, 255, 0.2));
+  box-shadow: var(--login-card-shadow, 0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.05));
   overflow: hidden;
   animation: card-entrance 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -296,8 +294,8 @@ checkAuthStatus()
 .card-header {
   padding: 40px 40px 32px;
   text-align: center;
-  background: linear-gradient(135deg, rgba(24, 144, 255, 0.05), rgba(114, 46, 209, 0.05));
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: var(--login-header-bg, linear-gradient(135deg, rgba(24, 144, 255, 0.05), rgba(114, 46, 209, 0.05)));
+  border-bottom: 1px solid var(--login-border, rgba(0, 0, 0, 0.06));
 }
 
 .logo {
@@ -339,7 +337,7 @@ checkAuthStatus()
 .logo-text p {
   margin: 8px 0 0;
   font-size: 16px;
-  color: #666;
+  color: var(--login-text-secondary, #666);
   font-weight: 500;
 }
 
@@ -353,13 +351,15 @@ checkAuthStatus()
   align-items: center;
   gap: 8px;
   font-weight: 600;
-  color: #262626;
+  color: var(--login-text-primary, #262626);
   font-size: 14px;
 }
 
 .form-input {
   border-radius: 12px;
-  border: 2px solid #e8e8e8;
+  border: 2px solid var(--login-input-border, #e8e8e8);
+  background: var(--login-input-bg, #ffffff) !important;
+  color: var(--login-text-primary, #262626) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   height: 48px;
 }
@@ -376,7 +376,7 @@ checkAuthStatus()
 }
 
 .input-icon {
-  color: #8c8c8c;
+  color: var(--login-text-tertiary, #8c8c8c);
   font-size: 16px;
 }
 
@@ -384,7 +384,7 @@ checkAuthStatus()
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #595959;
+  color: var(--login-text-secondary, #595959);
   font-size: 14px;
 }
 

@@ -1,0 +1,405 @@
+// SCSS Mixins Library
+// Centralized mixins for consistent styling across the application
+
+// =============================================================================
+// LAYOUT MIXINS
+// =============================================================================
+
+// Flexbox utilities
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-start {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+@mixin flex-end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-column-center {
+  @include flex-column;
+  align-items: center;
+  justify-content: center;
+}
+
+// Grid utilities
+@mixin grid-center {
+  display: grid;
+  place-items: center;
+}
+
+@mixin grid-responsive($min-width: 250px, $gap: var(--spacing-md)) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax($min-width, 1fr));
+  gap: $gap;
+}
+
+// =============================================================================
+// RESPONSIVE DESIGN MIXINS
+// =============================================================================
+
+// Breakpoint mixins
+@mixin mobile {
+  @media (max-width: #{$breakpoint-sm - 1px}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: #{$breakpoint-sm}) and (max-width: #{$breakpoint-md - 1px}) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: #{$breakpoint-md}) {
+    @content;
+  }
+}
+
+@mixin large-desktop {
+  @media (min-width: #{$breakpoint-lg}) {
+    @content;
+  }
+}
+
+@mixin xl-desktop {
+  @media (min-width: #{$breakpoint-xl}) {
+    @content;
+  }
+}
+
+// Custom breakpoint
+@mixin breakpoint($size) {
+  @media (min-width: #{$size}) {
+    @content;
+  }
+}
+
+@mixin max-breakpoint($size) {
+  @media (max-width: #{$size - 1px}) {
+    @content;
+  }
+}
+
+// =============================================================================
+// TEXT & TYPOGRAPHY MIXINS
+// =============================================================================
+
+@mixin text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin text-clamp($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@mixin text-gradient($gradient) {
+  background: $gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@mixin font-smoothing {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// =============================================================================
+// VISUAL EFFECTS MIXINS
+// =============================================================================
+
+// Shadow mixins
+@mixin card-shadow {
+  box-shadow: var(--shadow-card);
+}
+
+@mixin elevated-shadow {
+  box-shadow: var(--shadow-elevated);
+}
+
+@mixin custom-shadow($shadow) {
+  box-shadow: $shadow;
+}
+
+@mixin no-shadow {
+  box-shadow: none;
+}
+
+// Border radius mixins
+@mixin border-radius($radius: var(--radius-md)) {
+  border-radius: $radius;
+}
+
+@mixin rounded {
+  border-radius: 50%;
+}
+
+@mixin rounded-top($radius: var(--radius-md)) {
+  border-top-left-radius: $radius;
+  border-top-right-radius: $radius;
+}
+
+@mixin rounded-bottom($radius: var(--radius-md)) {
+  border-bottom-left-radius: $radius;
+  border-bottom-right-radius: $radius;
+}
+
+// =============================================================================
+// TRANSITION & ANIMATION MIXINS
+// =============================================================================
+
+@mixin smooth-transition {
+  transition: all var(--transition-normal);
+}
+
+@mixin fast-transition {
+  transition: all var(--transition-fast);
+}
+
+@mixin slow-transition {
+  transition: all var(--transition-slow);
+}
+
+@mixin theme-transition {
+  transition: background-color var(--transition-normal), 
+              color var(--transition-normal),
+              border-color var(--transition-normal),
+              box-shadow var(--transition-normal);
+}
+
+@mixin custom-transition($properties, $duration: var(--transition-normal), $easing: ease) {
+  transition: $properties $duration $easing;
+}
+
+@mixin hover-lift {
+  transition: transform var(--transition-normal);
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+@mixin hover-scale($scale: 1.05) {
+  transition: transform var(--transition-normal);
+  
+  &:hover {
+    transform: scale($scale);
+  }
+}
+
+// =============================================================================
+// POSITIONING MIXINS
+// =============================================================================
+
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin absolute-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+@mixin fixed-fill {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+@mixin sticky-top($top: 0) {
+  position: sticky;
+  top: $top;
+}
+
+// =============================================================================
+// COMPONENT MIXINS
+// =============================================================================
+
+// Button mixins
+@mixin button-reset {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+}
+
+@mixin button-base {
+  @include button-reset;
+  @include smooth-transition;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  user-select: none;
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// Card mixins
+@mixin card-base {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  @include card-shadow;
+  @include theme-transition;
+}
+
+@mixin card-hover {
+  @include hover-lift;
+  
+  &:hover {
+    box-shadow: var(--shadow-elevated);
+  }
+}
+
+// Input mixins
+@mixin input-base {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 14px;
+  @include theme-transition;
+  
+  &::placeholder {
+    color: var(--text-tertiary);
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--focus-outline);
+  }
+  
+  &:disabled {
+    background: var(--bg-tertiary);
+    color: var(--text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+// =============================================================================
+// UTILITY MIXINS
+// =============================================================================
+
+@mixin clearfix {
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+@mixin visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@mixin reset-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+@mixin reset-button {
+  @include button-reset;
+}
+
+@mixin reset-input {
+  appearance: none;
+  border: none;
+  background: none;
+  outline: none;
+  font: inherit;
+  color: inherit;
+}
+
+// =============================================================================
+// SCROLLBAR MIXINS
+// =============================================================================
+
+@mixin custom-scrollbar($width: 6px, $track-color: var(--bg-tertiary), $thumb-color: var(--border-color)) {
+  &::-webkit-scrollbar {
+    width: $width;
+    height: $width;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $track-color;
+    border-radius: calc($width / 2);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $thumb-color;
+    border-radius: calc($width / 2);
+    
+    &:hover {
+      background: var(--text-tertiary);
+    }
+  }
+}
+
+@mixin hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

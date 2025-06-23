@@ -44,16 +44,19 @@
       <a-row :gutter="[24, 24]" class="metrics-grid">
         <!-- Platform Health -->
         <a-col :xs="24" :lg="8">
-          <div class="metric-card platform-health">
-            <div class="card-header">
-              <div class="card-icon">
-                <CheckCircleOutlined />
+          <SkeletonLoader v-if="loadingStates.metrics" type="card" />
+          <a-card v-else class="metric-card platform-health">
+            <template #title>
+              <div class="card-header">
+                <div class="card-icon">
+                  <CheckCircleOutlined />
+                </div>
+                <div class="card-info">
+                  <span>Platform Health</span>
+                  <div class="card-subtitle">Overall system status</div>
+                </div>
               </div>
-              <div class="card-info">
-                <h3>Platform Health</h3>
-                <span class="card-subtitle">Overall system status</span>
-              </div>
-            </div>
+            </template>
             <div class="health-status">
               <div class="status-indicator healthy">
                 <span class="status-dot"></span>
@@ -70,21 +73,24 @@
                 </div>
               </div>
             </div>
-          </div>
+          </a-card>
         </a-col>
 
         <!-- Resource Utilization -->
         <a-col :xs="24" :lg="8">
-          <div class="metric-card resource-usage">
-            <div class="card-header">
-              <div class="card-icon">
-                <ClusterOutlined />
+          <SkeletonLoader v-if="loadingStates.metrics" type="card" />
+          <a-card v-else class="metric-card resource-usage">
+            <template #title>
+              <div class="card-header">
+                <div class="card-icon">
+                  <ClusterOutlined />
+                </div>
+                <div class="card-info">
+                  <span>Resource Utilization</span>
+                  <div class="card-subtitle">Platform-wide usage</div>
+                </div>
               </div>
-              <div class="card-info">
-                <h3>Resource Utilization</h3>
-                <span class="card-subtitle">Platform-wide usage</span>
-              </div>
-            </div>
+            </template>
             <div class="resource-metrics">
               <div class="resource-item">
                 <div class="resource-info">
@@ -108,21 +114,24 @@
                 <a-progress :percent="45" :show-info="false" stroke-color="#faad14" />
               </div>
             </div>
-          </div>
+          </a-card>
         </a-col>
 
         <!-- Performance Metrics -->
         <a-col :xs="24" :lg="8">
-          <div class="metric-card performance-card">
-            <div class="card-header">
-              <div class="card-icon">
-                <ThunderboltOutlined />
+          <SkeletonLoader v-if="loadingStates.metrics" type="card" />
+          <a-card v-else class="metric-card performance-card">
+            <template #title>
+              <div class="card-header">
+                <div class="card-icon">
+                  <ThunderboltOutlined />
+                </div>
+                <div class="card-info">
+                  <span>Performance</span>
+                  <div class="card-subtitle">System metrics</div>
+                </div>
               </div>
-              <div class="card-info">
-                <h3>Performance</h3>
-                <span class="card-subtitle">System metrics</span>
-              </div>
-            </div>
+            </template>
             <div class="performance-metrics">
               <div class="performance-score">
                 <span class="score-label">Overall Score</span>
@@ -148,7 +157,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </a-card>
         </a-col>
       </a-row>
 
@@ -162,7 +171,8 @@
                 View All
               </a-button>
             </template>
-            <div class="customer-list">
+            <SkeletonLoader v-if="loadingStates.customers" type="list" :count="4" />
+            <div v-else class="customer-list">
               <div v-for="customer in topCustomers" :key="customer.id" class="customer-item">
                 <div class="customer-info">
                   <a-avatar :size="40" style="background-color: #1890ff">
@@ -194,7 +204,8 @@
                 View All
               </a-button>
             </template>
-            <div class="project-list">
+            <SkeletonLoader v-if="loadingStates.projects" type="list" :count="4" />
+            <div v-else class="project-list">
               <div v-for="project in recentProjects" :key="project.id" class="project-item">
                 <div class="project-info">
                   <div class="project-icon">
@@ -226,7 +237,8 @@
                 Manage Services
               </a-button>
             </template>
-            <a-row :gutter="[16, 16]">
+            <SkeletonLoader v-if="loadingStates.services" type="grid" :count="5" />
+            <a-row v-else :gutter="[16, 16]">
               <a-col :xs="12" :sm="8" :lg="4" v-for="service in services" :key="service.name">
                 <div class="service-item">
                   <div class="service-icon" :class="service.status">
@@ -246,47 +258,110 @@
       </a-row>
 
       <!-- Quick Actions -->
-      <div class="quick-actions">
-        <h3>Quick Actions</h3>
-        <a-row :gutter="[16, 16]">
-          <a-col :xs="12" :sm="8" :lg="4">
-            <a-button block size="large" @click="navigateTo('/customers/create')">
-              <UserAddOutlined />
-              Add Customer
-            </a-button>
-          </a-col>
-          <a-col :xs="12" :sm="8" :lg="4">
-            <a-button block size="large" @click="navigateTo('/projects/create')">
-              <PlusOutlined />
-              Create Project
-            </a-button>
-          </a-col>
-          <a-col :xs="12" :sm="8" :lg="4">
-            <a-button block size="large" @click="navigateTo('/monitoring/platform')">
-              <MonitorOutlined />
-              View Monitoring
-            </a-button>
-          </a-col>
-          <a-col :xs="12" :sm="8" :lg="4">
-            <a-button block size="large" @click="navigateTo('/resources/capacity')">
-              <FundOutlined />
-              Capacity Planning
-            </a-button>
-          </a-col>
-          <a-col :xs="12" :sm="8" :lg="4">
-            <a-button block size="large" @click="navigateTo('/security/audit')">
-              <SecurityScanOutlined />
-              Security Audit
-            </a-button>
-          </a-col>
-          <a-col :xs="12" :sm="8" :lg="4">
-            <a-button block size="large" @click="navigateTo('/settings/maintenance')">
-              <ToolOutlined />
-              Maintenance
-            </a-button>
-          </a-col>
-        </a-row>
-      </div>
+      <a-row :gutter="[24, 24]" class="quick-actions-grid">
+        <a-col :xs="24">
+          <a-card title="Quick Actions" class="quick-actions-card">
+            <template #extra>
+              <a-button type="link" size="small" @click="navigateTo('/admin/settings')">
+                Settings
+              </a-button>
+            </template>
+            <a-row :gutter="[16, 16]">
+              <a-col :xs="12" :sm="8" :lg="4">
+                <div class="action-item" @click="navigateTo('/customers/create')">
+                  <div class="action-icon">
+                    <UserAddOutlined />
+                  </div>
+                  <h4 class="action-name">Add Customer</h4>
+                  <div class="action-description">
+                    <span class="action-subtitle">Create new customer account</span>
+                  </div>
+                </div>
+              </a-col>
+              <a-col :xs="12" :sm="8" :lg="4">
+                <div class="action-item" @click="navigateTo('/projects/create')">
+                  <div class="action-icon">
+                    <PlusOutlined />
+                  </div>
+                  <h4 class="action-name">Create Project</h4>
+                  <div class="action-description">
+                    <span class="action-subtitle">Setup new project</span>
+                  </div>
+                </div>
+              </a-col>
+              <a-col :xs="12" :sm="8" :lg="4">
+                <div class="action-item" @click="navigateTo('/monitoring/platform')">
+                  <div class="action-icon">
+                    <MonitorOutlined />
+                  </div>
+                  <h4 class="action-name">View Monitoring</h4>
+                  <div class="action-description">
+                    <span class="action-subtitle">Platform metrics</span>
+                  </div>
+                </div>
+              </a-col>
+              <a-col :xs="12" :sm="8" :lg="4">
+                <div class="action-item" @click="navigateTo('/resources/capacity')">
+                  <div class="action-icon">
+                    <FundOutlined />
+                  </div>
+                  <h4 class="action-name">Capacity Planning</h4>
+                  <div class="action-description">
+                    <span class="action-subtitle">Resource planning</span>
+                  </div>
+                </div>
+              </a-col>
+              <a-col :xs="12" :sm="8" :lg="4">
+                <div class="action-item" @click="navigateTo('/security/audit')">
+                  <div class="action-icon">
+                    <SecurityScanOutlined />
+                  </div>
+                  <h4 class="action-name">Security Audit</h4>
+                  <div class="action-description">
+                    <span class="action-subtitle">Security review</span>
+                  </div>
+                </div>
+              </a-col>
+              <a-col :xs="12" :sm="8" :lg="4">
+                <div class="action-item" @click="navigateTo('/settings/maintenance')">
+                  <div class="action-icon">
+                    <ToolOutlined />
+                  </div>
+                  <h4 class="action-name">Maintenance</h4>
+                  <div class="action-description">
+                    <span class="action-subtitle">System maintenance</span>
+                  </div>
+                </div>
+              </a-col>
+              <a-col :xs="12" :sm="8" :lg="4">
+                <div class="action-item" @click="showExportImport = true">
+                  <div class="action-icon">
+                    <ExportOutlined />
+                  </div>
+                  <h4 class="action-name">Export Data</h4>
+                  <div class="action-description">
+                    <span class="action-subtitle">Export & Import</span>
+                  </div>
+                </div>
+              </a-col>
+            </a-row>
+          </a-card>
+        </a-col>
+      </a-row>
+
+      <!-- Export/Import Modal -->
+      <a-modal
+        v-model:open="showExportImport"
+        title="Data Export & Import"
+        width="1000px"
+        :footer="null"
+        :destroy-on-close="true"
+      >
+        <DataExportImport
+          @export-complete="onExportComplete"
+          @import-complete="onImportComplete"
+        />
+      </a-modal>
     </div>
   </AppLayout>
 </template>
@@ -296,6 +371,10 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCustomerStore } from '@/stores/customer'
 import AppLayout from '@/components/AppLayout.vue'
+import SkeletonLoader from '@/components/SkeletonLoader.vue'
+import DataExportImport from '@/components/DataExportImport.vue'
+import { useToast, handleApiError, handleSuccess } from '@/composables/useToast'
+import { usePerformanceMonitoring, useDebouncedSearch, useImageOptimization } from '@/composables/usePerformance'
 import {
   ReloadOutlined,
   CheckCircleOutlined,
@@ -314,13 +393,26 @@ import {
   HddOutlined,
   GlobalOutlined,
   DatabaseOutlined,
-  LineChartOutlined
+  LineChartOutlined,
+  ExportOutlined
 } from '@ant-design/icons-vue'
 
 const router = useRouter()
 const customerStore = useCustomerStore()
+const toast = useToast()
+const { startTiming, endTiming, measureAsync } = usePerformanceMonitoring()
 const loading = ref(false)
 const selectedRegion = ref('all')
+const showExportImport = ref(false)
+
+// Individual loading states
+const loadingStates = reactive({
+  metrics: true,
+  customers: true,
+  projects: true,
+  services: true,
+  actions: false
+})
 
 const platformStats = reactive({
   totalCustomers: 156,
@@ -429,17 +521,72 @@ const services = ref([
 ])
 
 const navigateTo = (path: string) => {
-  router.push(path)
+  try {
+    router.push(path)
+  } catch (error) {
+    handleApiError(error, `Failed to navigate to ${path}`)
+  }
 }
 
 const refreshData = async () => {
   loading.value = true
+
+  // Start performance monitoring
+  startTiming('dataRefresh')
+
+  // Reset all loading states
+  Object.keys(loadingStates).forEach(key => {
+    loadingStates[key] = true
+  })
+
   try {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    // Measure each data loading phase
+    await measureAsync('metricsLoad', async () => {
+      await new Promise(resolve => setTimeout(resolve, 800))
+      loadingStates.metrics = false
+    })
+
+    await measureAsync('customersLoad', async () => {
+      await new Promise(resolve => setTimeout(resolve, 400))
+      loadingStates.customers = false
+    })
+
+    await measureAsync('projectsLoad', async () => {
+      await new Promise(resolve => setTimeout(resolve, 200))
+      loadingStates.projects = false
+    })
+
+    await measureAsync('servicesLoad', async () => {
+      await new Promise(resolve => setTimeout(resolve, 200))
+      loadingStates.services = false
+    })
+
+    // Simulate main API call with potential error
+    await measureAsync('mainApiCall', async () => {
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          // Simulate random error (10% chance)
+          if (Math.random() < 0.1) {
+            reject(new Error('Failed to fetch platform data'))
+          } else {
+            resolve(true)
+          }
+        }, 500)
+      })
+    })
+
+    handleSuccess('Platform data refreshed successfully')
     console.log('Platform data refreshed')
+  } catch (error) {
+    handleApiError(error, 'Failed to refresh platform data')
+
+    // Reset loading states on error
+    Object.keys(loadingStates).forEach(key => {
+      loadingStates[key] = false
+    })
   } finally {
     loading.value = false
+    endTiming('dataRefresh')
   }
 }
 
@@ -468,528 +615,39 @@ const getServiceStatusBadge = (status: string) => {
 }
 
 const formatDate = (date: Date) => {
-  return date.toLocaleDateString('en-US', { 
-    month: 'short', 
-    day: 'numeric' 
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric'
   })
 }
 
-onMounted(() => {
+const onExportComplete = (data: any) => {
+  console.log('Export completed:', data)
+  showExportImport.value = false
+}
+
+const onImportComplete = (data: any) => {
+  console.log('Import completed:', data)
+  showExportImport.value = false
+  // Refresh data after import
   refreshData()
+}
+
+onMounted(async () => {
+  // Initial load with staggered skeleton loading
+  setTimeout(() => { loadingStates.metrics = false }, 600)
+  setTimeout(() => { loadingStates.customers = false }, 1000)
+  setTimeout(() => { loadingStates.projects = false }, 1200)
+  setTimeout(() => { loadingStates.services = false }, 1400)
 })
 </script>
 
-<style scoped>
-/* Platform Overview Styles */
-.platform-overview {
-  width: 100%;
-  padding: 0;
-}
+<style lang="scss" scoped>
+// Dashboard styles are now in SCSS files
+// All styles moved to /src/styles/components/dashboard.scss
 
-/* Platform Header */
-.platform-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 16px;
-  padding: 32px;
-  margin-bottom: 32px;
-  color: white;
-  position: relative;
-  overflow: hidden;
-}
 
-.platform-header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 200px;
-  height: 200px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  transform: translate(50%, -50%);
-}
 
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  position: relative;
-  z-index: 1;
-}
 
-.platform-title {
-  font-size: 32px;
-  font-weight: 700;
-  margin: 0 0 8px 0;
-  color: white;
-}
 
-.platform-subtitle {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.9);
-  margin: 0 0 24px 0;
-}
-
-.platform-stats {
-  display: flex;
-  gap: 32px;
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.stat-value {
-  font-size: 28px;
-  font-weight: 700;
-  color: white;
-  line-height: 1;
-}
-
-.stat-label {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.8);
-  margin-top: 4px;
-}
-
-.header-actions {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-}
-
-/* Metric Cards */
-.metrics-grid {
-  margin-bottom: 32px;
-}
-
-.metric-card {
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f0f0f0;
-  height: 100%;
-  transition: all 0.3s ease;
-}
-
-.metric-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-}
-
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.card-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  color: white;
-  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
-}
-
-.card-info h3 {
-  font-size: 18px;
-  font-weight: 600;
-  color: #262626;
-  margin: 0;
-}
-
-.card-subtitle {
-  font-size: 14px;
-  color: #8c8c8c;
-}
-
-/* Platform Health */
-.health-status {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.status-indicator {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #52c41a;
-}
-
-.status-text {
-  font-size: 16px;
-  font-weight: 500;
-  color: #52c41a;
-}
-
-.health-metrics {
-  display: flex;
-  gap: 24px;
-}
-
-.health-item {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.metric-label {
-  font-size: 12px;
-  color: #8c8c8c;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.metric-value {
-  font-size: 20px;
-  font-weight: 600;
-  color: #262626;
-}
-
-/* Resource Usage */
-.resource-metrics {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.resource-item {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.resource-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.resource-label {
-  font-size: 14px;
-  color: #595959;
-  font-weight: 500;
-}
-
-.resource-value {
-  font-size: 16px;
-  font-weight: 600;
-  color: #262626;
-}
-
-/* Performance Card */
-.performance-metrics {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.performance-score {
-  display: flex;
-  align-items: baseline;
-  gap: 4px;
-}
-
-.score-label {
-  font-size: 14px;
-  color: #8c8c8c;
-  font-weight: 500;
-  margin-right: 8px;
-}
-
-.score-value {
-  font-size: 32px;
-  font-weight: 700;
-  color: #262626;
-}
-
-.score-unit {
-  font-size: 20px;
-  color: #8c8c8c;
-  font-weight: 500;
-}
-
-.performance-trend {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.trend-icon.positive {
-  color: #52c41a;
-}
-
-.trend-text {
-  font-size: 14px;
-  color: #52c41a;
-}
-
-.performance-breakdown {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.breakdown-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid #f5f5f5;
-}
-
-.metric-name {
-  font-size: 14px;
-  color: #595959;
-}
-
-.metric-value {
-  font-size: 14px;
-  font-weight: 600;
-  color: #262626;
-}
-
-/* Overview Cards */
-.overview-grid {
-  margin-bottom: 32px;
-}
-
-.overview-card {
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f0f0f0;
-}
-
-.customer-list, .project-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.customer-item, .project-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  background: #fafafa;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-}
-
-.customer-item:hover, .project-item:hover {
-  background: #f0f0f0;
-}
-
-.customer-info, .project-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.customer-details, .project-details {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.customer-name, .project-name {
-  font-size: 16px;
-  font-weight: 600;
-  color: #262626;
-  margin: 0;
-}
-
-.customer-projects, .project-customer {
-  font-size: 12px;
-  color: #8c8c8c;
-}
-
-.customer-usage, .project-status {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-}
-
-.usage-amount {
-  font-size: 16px;
-  font-weight: 600;
-  color: #262626;
-}
-
-.usage-trend {
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.usage-trend.positive {
-  color: #52c41a;
-}
-
-.usage-trend.negative {
-  color: #f5222d;
-}
-
-.project-date {
-  font-size: 12px;
-  color: #8c8c8c;
-}
-
-/* Service Grid */
-.service-grid {
-  margin-bottom: 32px;
-}
-
-.service-card {
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f0f0f0;
-}
-
-.service-item {
-  background: white;
-  border: 1px solid #f0f0f0;
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-  transition: all 0.3s ease;
-}
-
-.service-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.service-icon {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 12px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  color: white;
-}
-
-.service-icon.healthy {
-  background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%);
-}
-
-.service-icon.warning {
-  background: linear-gradient(135deg, #faad14 0%, #d48806 100%);
-}
-
-.service-icon.error {
-  background: linear-gradient(135deg, #f5222d 0%, #cf1322 100%);
-}
-
-.service-name {
-  font-size: 16px;
-  font-weight: 600;
-  color: #262626;
-  margin: 0 0 8px 0;
-}
-
-.service-metrics {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-bottom: 12px;
-}
-
-.service-instances, .service-uptime {
-  font-size: 12px;
-  color: #8c8c8c;
-}
-
-/* Quick Actions */
-.quick-actions {
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid #f0f0f0;
-}
-
-.quick-actions h3 {
-  font-size: 20px;
-  font-weight: 600;
-  color: #262626;
-  margin: 0 0 20px 0;
-}
-
-.quick-actions .ant-btn {
-  height: 60px;
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .platform-header {
-    padding: 24px;
-  }
-
-  .header-content {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .platform-stats {
-    gap: 20px;
-  }
-
-  .platform-title {
-    font-size: 24px;
-  }
-
-  .metric-card {
-    padding: 20px;
-  }
-
-  .health-metrics {
-    gap: 16px;
-  }
-}
-
-@media (max-width: 576px) {
-  .platform-stats {
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .customer-item, .project-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .customer-usage, .project-status {
-    align-items: flex-start;
-  }
-}
 </style>

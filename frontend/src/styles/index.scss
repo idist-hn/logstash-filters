@@ -1,0 +1,25 @@
+// Main SCSS entry point
+// Import order is important: variables first, then mixins, then components
+
+// 1. Variables (CSS custom properties and SCSS variables)
+@import './variables.scss';
+
+// 2. Mixins (reusable SCSS mixins)
+@import './mixins.scss';
+
+// 3. Base styles
+@import './base.scss';
+
+// 4. Component styles
+@import './components/app-layout.scss';
+@import './components/dashboard.scss';
+
+// Note: This file can be imported in main.scss or individual component files
+// Usage examples:
+//
+// In main.scss:
+// @import './styles/index.scss';
+//
+// In component files:
+// @import '@/styles/mixins.scss';
+// @import '@/styles/variables.scss';

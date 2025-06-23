@@ -5,6 +5,11 @@ import router from './router'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/reset.css'
 import './style.css'
+import './styles/main.scss'
+import { autoInitializeTheme } from '@/composables/useTheme'
+
+// Initialize theme system before creating app
+autoInitializeTheme()
 
 const app = createApp(App)
 
