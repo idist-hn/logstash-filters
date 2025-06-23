@@ -1,0 +1,127 @@
+metricbeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+# System module
+metricbeat.modules:
+- module: system
+  metricsets:
+    - cpu
+    - load
+    - memory
+    - network
+    - process
+    - process_summary
+    - socket_summary
+    - entropy
+    - core
+    - diskio
+    - socket
+    - service
+    - users
+  enabled: true
+  period: 10s
+  processes: ['.*']
+  cpu.metrics:  ["percentages", "normalized_percentages"]
+  core.metrics: ["percentages"]
+
+- module: docker
+  metricsets:
+    - container
+    - cpu
+    - diskio
+    - event
+    - healthcheck
+    - info
+    - image
+    - memory
+    - network
+  hosts: ["unix:///var/run/docker.sock"]
+  period: 10s
+  enabled: true
+
+- module: elasticsearch
+  metricsets:
+    - node
+    - node_stats
+    - cluster_stats
+    - index
+    - index_recovery
+    - index_summary
+    - shard
+    - ml_job
+  period: 10s
+  hosts: ["http://elasticsearch:9200"]
+  username: "elastic"
+  password: "${ELASTICSEARCH_PASSWORD}"
+  enabled: true
+
+- module: kibana
+  metricsets:
+    - status
+    - stats
+  period: 10s
+  hosts: ["http://kibana:5601"]
+  username: "elastic"
+  password: "${ELASTICSEARCH_PASSWORD}"
+  enabled: true
+
+- module: logstash
+  metricsets:
+    - node
+    - node_stats
+  period: 10s
+  hosts: ["http://logstash:9600"]
+  enabled: true
+
+# Processors
+processors:
+  - add_host_metadata:
+      when.not.contains.tags: forwarded
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - add_kubernetes_metadata: ~
+
+# Output configuration
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+  username: "elastic"
+  password: "${ELASTICSEARCH_PASSWORD}"
+  index: "metricbeat-%{[agent.version]}-%{+yyyy.MM.dd}"
+  template.settings:
+    index.number_of_shards: 1
+    index.number_of_replicas: 0
+    index.refresh_interval: 5s
+
+# Kibana configuration
+setup.kibana:
+  host: "http://kibana:5601"
+  username: "elastic"
+  password: "${ELASTICSEARCH_PASSWORD}"
+
+# Template configuration
+setup.template.settings:
+  index.number_of_shards: 1
+  index.number_of_replicas: 0
+  index.refresh_interval: 5s
+
+# ILM configuration
+setup.ilm.enabled: true
+setup.ilm.rollover_alias: "metricbeat"
+setup.ilm.pattern: "{now/d}-000001"
+
+# Logging
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/metricbeat
+  name: metricbeat
+  keepfiles: 7
+  permissions: 0644
+
+# Monitoring
+monitoring.enabled: true
+monitoring.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+  username: "elastic"
+  password: "${ELASTICSEARCH_PASSWORD}"
