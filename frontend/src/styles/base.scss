@@ -242,6 +242,84 @@ body {
   }
 }
 
+// AutoComplete and Select dropdowns
+.ant-select-dropdown {
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--shadow-elevated) !important;
+  @include theme-transition;
+
+  .ant-select-item {
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+    @include theme-transition;
+
+    &:hover {
+      background: var(--hover-bg) !important;
+    }
+
+    &.ant-select-item-option-selected {
+      background: var(--active-bg) !important;
+      color: var(--primary-color) !important;
+    }
+
+    &.ant-select-item-option-active {
+      background: var(--hover-bg) !important;
+    }
+  }
+}
+
+// Input and AutoComplete components
+.ant-input {
+  background: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+  @include theme-transition;
+
+  &::placeholder {
+    color: var(--text-tertiary) !important;
+  }
+
+  &:hover {
+    border-color: var(--primary-color) !important;
+  }
+
+  &:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 2px var(--focus-outline) !important;
+  }
+}
+
+.ant-select {
+  .ant-select-selector {
+    background: none !important;
+    border-color: none !important;
+    color: var(--text-primary) !important;
+    @include theme-transition;
+  }
+
+  .ant-select-selection-search-input {
+    color: var(--text-primary) !important;
+  }
+
+  .ant-select-selection-placeholder {
+    color: var(--text-tertiary) !important;
+  }
+
+  .ant-select-arrow {
+    color: var(--text-secondary) !important;
+  }
+
+  &:hover .ant-select-selector {
+    border-color: var(--primary-color) !important;
+  }
+
+  &.ant-select-focused .ant-select-selector {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 2px var(--focus-outline) !important;
+  }
+}
+
 // Border radius utilities
 .rounded {
   border-radius: 50%;

@@ -6,7 +6,7 @@
           v-model:value="searchQuery"
           :options="searchSuggestions"
           :placeholder="placeholder"
-          class="search-input"
+          class="search-advance-input"
           @search="onSearch"
           @select="onSelect"
           @keyup.enter="performSearch"
@@ -24,18 +24,18 @@
             </div>
           </template>
         </a-auto-complete>
-        
+
         <div class="search-actions">
           <a-button
             v-if="showFilters"
-            type="text"
+            type="default"
             class="filter-toggle"
             :class="{ active: filtersVisible }"
             @click="toggleFilters"
           >
             <FilterOutlined />
           </a-button>
-          
+
           <a-button
             type="primary"
             class="search-button"
@@ -332,213 +332,3 @@ watch(() => props, () => {
 })
 </script>
 
-<style lang="scss" scoped>
-.advanced-search {
-  width: 100%;
-  max-width: 600px;
-}
-
-.search-container {
-  position: relative;
-}
-
-.search-input-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--bg-primary);
-  border: 2px solid var(--border-light);
-  border-radius: 12px;
-  padding: 4px;
-  transition: all 0.3s ease;
-
-  &:focus-within {
-    border-color: #1890ff;
-    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-  }
-}
-
-.search-input {
-  flex: 1;
-  border: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
-
-  :deep(.ant-input) {
-    border: none !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    padding: 8px 12px;
-    font-size: 14px;
-  }
-}
-
-.search-actions {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.filter-toggle {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-tertiary);
-  transition: all 0.2s ease;
-
-  &:hover,
-  &.active {
-    background: rgba(24, 144, 255, 0.1);
-    color: #1890ff;
-  }
-}
-
-.search-button {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.search-filters {
-  margin-top: 12px;
-  padding: 16px;
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-}
-
-.filter-row {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.filter-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  label {
-    font-size: 12px;
-    color: var(--text-secondary);
-    white-space: nowrap;
-  }
-}
-
-.filter-actions {
-  display: flex;
-  gap: 8px;
-  margin-left: auto;
-}
-
-.search-suggestion {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 0;
-}
-
-.suggestion-icon {
-  width: 16px;
-  height: 16px;
-  color: var(--text-tertiary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.suggestion-content {
-  flex: 1;
-}
-
-.suggestion-label {
-  font-size: 13px;
-  color: var(--text-primary);
-}
-
-.suggestion-type {
-  font-size: 11px;
-  color: var(--text-tertiary);
-}
-
-.search-history {
-  margin-top: 12px;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.history-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-color);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-secondary);
-}
-
-.history-items {
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-.history-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-
-  &:hover {
-    background: var(--bg-tertiary);
-  }
-}
-
-.history-icon {
-  color: var(--text-tertiary);
-  font-size: 12px;
-}
-
-.history-query {
-  flex: 1;
-  font-size: 13px;
-  color: var(--text-primary);
-}
-
-.history-time {
-  font-size: 11px;
-  color: var(--text-tertiary);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .filter-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-  }
-
-  .filter-group {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-  }
-
-  .filter-actions {
-    margin-left: 0;
-    justify-content: flex-end;
-  }
-}
-</style>

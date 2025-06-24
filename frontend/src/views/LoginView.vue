@@ -244,12 +244,13 @@ checkAuthStatus()
 
 <style scoped>
 .login-container {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  min-height: 100vh !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   position: relative;
   background: var(--login-bg, linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%));
+  padding: 20px !important;
 }
 
 /* Simple Background */
@@ -268,8 +269,8 @@ checkAuthStatus()
 .login-card {
   position: relative;
   z-index: 10;
-  width: 100%;
-  max-width: 480px;
+  width: 100% !important;
+  max-width: 480px !important;
   background: var(--login-card-bg, rgba(255, 255, 255, 0.95));
   backdrop-filter: blur(20px);
   border-radius: 24px;
@@ -435,8 +436,8 @@ checkAuthStatus()
 /* Responsive */
 @media (max-width: 640px) {
   .login-card {
-    margin: 16px;
-    max-width: none;
+    margin: 16px !important;
+    max-width: none !important;
   }
 
   .card-header {

@@ -12,6 +12,14 @@
 
 // 4. Component styles
 @import './components/app-layout.scss';
+@import './components/advanced-search.scss';
+
+// Page styles
+@import './pages/dashboard.scss';
+// @import './pages/login.scss'; // Temporarily disabled to avoid conflicts with LoginView.vue
+
+// Utility classes
+@import './utilities.scss';
 @import './components/dashboard.scss';
 
 // Note: This file can be imported in main.scss or individual component files

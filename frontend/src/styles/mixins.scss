@@ -2,6 +2,16 @@
 // Centralized mixins for consistent styling across the application
 
 // =============================================================================
+// BREAKPOINT VARIABLES (to avoid circular import)
+// =============================================================================
+
+$breakpoint-xs: 480px;
+$breakpoint-sm: 768px;
+$breakpoint-md: 992px;
+$breakpoint-lg: 1200px;
+$breakpoint-xl: 1600px;
+
+// =============================================================================
 // LAYOUT MIXINS
 // =============================================================================
 

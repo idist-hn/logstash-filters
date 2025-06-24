@@ -1,0 +1,105 @@
+/* Login Page Styles */
+@import '../mixins.scss';
+
+.login-page {
+  min-height: 100vh;
+  @include flex-center;
+  background: var(--bg-primary);
+  @include theme-transition;
+}
+
+// Note: LoginView.vue has its own .login-container styles
+// This file provides additional login page styles that don't conflict
+
+.login-form-wrapper {
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  @include border-radius(var(--radius-lg));
+  box-shadow: var(--shadow-elevated);
+  @include theme-transition;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+
+  h1 {
+    margin: 0 0 8px 0;
+    color: var(--text-primary);
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+}
+
+.login-form {
+  .ant-form-item {
+    margin-bottom: 20px;
+  }
+
+  .ant-input {
+    height: 44px;
+    background: var(--bg-primary) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-primary) !important;
+    @include theme-transition;
+
+    &::placeholder {
+      color: var(--text-tertiary) !important;
+    }
+
+    &:hover {
+      border-color: var(--primary-color) !important;
+    }
+
+    &:focus {
+      border-color: var(--primary-color) !important;
+      box-shadow: 0 0 0 2px var(--focus-outline) !important;
+    }
+  }
+
+  .ant-btn {
+    width: 100%;
+    height: 44px;
+    font-size: 16px;
+    font-weight: 600;
+    @include border-radius(var(--radius-md));
+  }
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+
+  p {
+    margin: 0;
+    color: var(--text-tertiary);
+    font-size: 12px;
+  }
+}
+
+/* Responsive */
+@include mobile {
+  .login-form-wrapper {
+    margin: 16px;
+    padding: 24px;
+  }
+
+  .login-header {
+    margin-bottom: 24px;
+
+    h1 {
+      font-size: 24px;
+    }
+  }
+}
