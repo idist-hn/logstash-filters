@@ -14,6 +14,25 @@ global:
     blocked_index_pattern: "blocked-metrics-%{+YYYY.MM.dd}"
     include_block_reason: true
 
+  # Global blocked fields (apply to all services)
+  blocked_fields:
+    - "*password*"
+    - "*secret*"
+    - "*key*"
+    - "*token*"
+    - "*auth*"
+    - "*credential*"
+    - "*private*"
+    - "*ssl_*"
+    - "*rsa_*"
+    - "*cert*"
+    - "*signature*"
+    - "*.user"
+    - "*.username"
+    - "*.email"
+    - "*.ip_address"
+    - "*session*"
+
 # MySQL filter rules
 mysql:
   enabled: true
@@ -26,8 +45,7 @@ mysql:
     - "query"
   
   # Blocked metricsets (nếu có)
-  blocked_metricsets:
-    - "cpu"
+  blocked_metricsets: []
 
   # Field filtering
   field_filters:
@@ -59,11 +77,18 @@ mysql:
       
     # Blocked fields - không cho phép các field này
     blocked_fields:
-      - "mysql.status.ssl_*"  # SSL info có thể nhạy cảm
-      - "mysql.status.rsa_*"  # RSA keys
-      - "*password*"          # Bất kỳ field nào chứa password
-      - "*secret*"            # Bất kỳ field nào chứa secret
-      - "*key*"               # Bất kỳ field nào chứa key
+      - "mysql.status.ssl_*"              # SSL info có thể nhạy cảm
+      - "mysql.status.rsa_*"              # RSA keys
+      - "mysql.status.*password*"         # Password fields
+      - "mysql.status.*secret*"           # Secret fields
+      - "mysql.status.*key*"              # Key fields
+      - "mysql.status.version*"           # Version info (security)
+      - "mysql.status.hostname"           # Hostname (privacy)
+      - "mysql.status.server_id"          # Server ID (privacy)
+      - "mysql.performance.*digest*"      # Query digests (privacy)
+      - "mysql.performance.*schema*"      # Schema names (privacy)
+      - "mysql.galera_status.*uuid*"      # UUIDs (privacy)
+      - "mysql.galera_status.*address*"   # IP addresses (privacy)
       
   # Value limits
   value_limits:
@@ -134,11 +159,17 @@ postgresql:
       
     # Blocked fields
     blocked_fields:
-      - "*password*"
-      - "*secret*"
-      - "*key*"
-      - "*token*"
-      - "postgresql.activity.query"  # Có thể chứa sensitive data
+      - "postgresql.activity.query"           # Queries có thể chứa sensitive data
+      - "postgresql.activity.client.address"  # Client IP addresses (privacy)
+      - "postgresql.activity.user.name"       # Usernames (privacy)
+      - "postgresql.database.*password*"      # Password fields
+      - "postgresql.database.*secret*"        # Secret fields
+      - "postgresql.database.*key*"           # Key fields
+      - "postgresql.statement.*query*"        # Statement queries (privacy)
+      - "postgresql.statement.*user*"         # Statement users (privacy)
+      - "postgresql.*version*"                # Version info (security)
+      - "postgresql.*hostname*"               # Hostname (privacy)
+      - "postgresql.*address*"                # IP addresses (privacy)
       
   # Value limits
   value_limits:
@@ -229,6 +260,26 @@ elasticsearch:
     - "shard"
     - "index_recovery"
     - "node"
+
+  # Field filtering
+  field_filters:
+    # Blocked fields
+    blocked_fields:
+      - "elasticsearch.cluster.*password*"     # Password fields
+      - "elasticsearch.cluster.*secret*"       # Secret fields
+      - "elasticsearch.cluster.*key*"          # Key fields
+      - "elasticsearch.node.*password*"        # Node password fields
+      - "elasticsearch.node.*secret*"          # Node secret fields
+      - "elasticsearch.node.*key*"             # Node key fields
+      - "elasticsearch.node.host.ip"           # IP addresses (privacy)
+      - "elasticsearch.node.transport.address" # Transport addresses (privacy)
+      - "elasticsearch.node.http.publish_address" # HTTP addresses (privacy)
+      - "elasticsearch.index.*user*"           # User info (privacy)
+      - "elasticsearch.index.*query*"          # Query info (privacy)
+      - "elasticsearch.*version*"              # Version info (security)
+      - "elasticsearch.*hostname*"             # Hostname (privacy)
+      - "elasticsearch.*address*"              # IP addresses (privacy)
+      - "elasticsearch.index.name"             # Index names (privacy)
 
 
 
