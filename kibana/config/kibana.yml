@@ -5,8 +5,7 @@ server.port: 5601
 
 # Elasticsearch settings
 elasticsearch.hosts: ["http://elasticsearch:9200"]
-elasticsearch.username: "elastic"
-elasticsearch.password: "${ELASTIC_PASSWORD}"
+elasticsearch.serviceAccountToken: "AAEAAWVsYXN0aWMva2liYW5hL2tpYmFuYS1jbG91ZHdhdGNoOk0yMnBHOHlsVE9hLWp5S2J1MkEwRUE"
 
 # Security settings
 xpack.security.enabled: true

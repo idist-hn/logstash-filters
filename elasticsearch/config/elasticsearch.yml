@@ -35,7 +35,7 @@ thread_pool.search.queue_size: 2000
 thread_pool.get.queue_size: 2000
 
 # Cluster settings
-cluster.routing.allocation.disk.threshold.enabled: true
+cluster.routing.allocation.disk.threshold_enabled: true
 cluster.routing.allocation.disk.watermark.low: 85%
 cluster.routing.allocation.disk.watermark.high: 90%
 cluster.routing.allocation.disk.watermark.flood_stage: 95%

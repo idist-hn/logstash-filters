@@ -1,0 +1,134 @@
+{
+  "index_patterns": ["metrics-allow-*"],
+  "data_stream": {},
+  "priority": 200,
+  "template": {
+    "settings": {
+      "index": {
+        "number_of_shards": 1,
+        "number_of_replicas": 0,
+        "refresh_interval": "5s",
+        "codec": "best_compression",
+        "lifecycle": {
+          "name": "allow-policy"
+        }
+      }
+    },
+    "mappings": {
+      "properties": {
+        "@timestamp": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "agent": {
+          "properties": {
+            "type": { "type": "keyword" },
+            "version": { "type": "keyword" },
+            "name": { "type": "keyword" }
+          }
+        },
+        "service": {
+          "properties": {
+            "type": { "type": "keyword" },
+            "name": { "type": "keyword" }
+          }
+        },
+        "metricset": {
+          "properties": {
+            "name": { "type": "keyword" }
+          }
+        },
+        "host": {
+          "properties": {
+            "name": { "type": "keyword" },
+            "ip": { "type": "ip" }
+          }
+        },
+        "mysql": {
+          "properties": {
+            "status": {
+              "properties": {
+                "connections": { "type": "long" },
+                "max_connections": { "type": "long" },
+                "threads_connected": { "type": "long" },
+                "threads_running": { "type": "long" },
+                "queries": { "type": "long" },
+                "slow_queries": { "type": "long" },
+                "com_select": { "type": "long" },
+                "com_insert": { "type": "long" },
+                "com_update": { "type": "long" },
+                "com_delete": { "type": "long" }
+              }
+            },
+            "performance": {
+              "properties": {
+                "events_statements_total": { "type": "long" },
+                "events_statements_current": { "type": "long" }
+              }
+            }
+          }
+        },
+        "postgresql": {
+          "properties": {
+            "database": {
+              "properties": {
+                "name": { "type": "keyword" },
+                "number_of_backends": { "type": "long" },
+                "transactions": {
+                  "properties": {
+                    "commit": { "type": "long" },
+                    "rollback": { "type": "long" }
+                  }
+                },
+                "blocks": {
+                  "properties": {
+                    "read": { "type": "long" },
+                    "hit": { "type": "long" }
+                  }
+                },
+                "rows": {
+                  "properties": {
+                    "returned": { "type": "long" },
+                    "fetched": { "type": "long" },
+                    "inserted": { "type": "long" },
+                    "updated": { "type": "long" },
+                    "deleted": { "type": "long" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "elasticsearch": {
+          "properties": {
+            "node": {
+              "properties": {
+                "name": { "type": "keyword" },
+                "jvm": {
+                  "properties": {
+                    "memory": {
+                      "properties": {
+                        "heap": {
+                          "properties": {
+                            "used": { "type": "long" },
+                            "max": { "type": "long" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "filter_status": { "type": "keyword" },
+        "filter_processed_at": { "type": "date" },
+        "removed_fields": { "type": "keyword" },
+        "processed_by": { "type": "keyword" },
+        "pipeline": { "type": "keyword" },
+        "tags": { "type": "keyword" }
+      }
+    }
+  }
+}

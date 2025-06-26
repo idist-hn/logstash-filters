@@ -216,17 +216,21 @@ alerting:
 elasticsearch:
   enabled: true
 
+  # Allowed metricsets
+  allowed_metricsets:
+    - "cluster_stats"
+    - "index"
+    - "index_summary"
+    - "node_stats"
+    - "ml_job"
+
   # Blocked metricsets
   blocked_metricsets:
     - "shard"
     - "index_recovery"
     - "node"
 
-  # Allowed metricsets
-  allowed_metricsets:
-    - "cluster_stats"
-    - "index"
-    - "index_summary"
+
 
 # Performance settings - Optimized for 256GB RAM
 performance:

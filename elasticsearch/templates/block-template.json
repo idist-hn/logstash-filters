@@ -1,0 +1,59 @@
+{
+  "index_patterns": ["metrics-block-*"],
+  "data_stream": {},
+  "priority": 200,
+  "template": {
+    "settings": {
+      "index": {
+        "number_of_shards": 1,
+        "number_of_replicas": 0,
+        "refresh_interval": "10s",
+        "codec": "best_compression",
+        "lifecycle": {
+          "name": "block-policy"
+        }
+      }
+    },
+    "mappings": {
+      "properties": {
+        "@timestamp": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "agent": {
+          "properties": {
+            "type": { "type": "keyword" },
+            "version": { "type": "keyword" },
+            "name": { "type": "keyword" }
+          }
+        },
+        "service": {
+          "properties": {
+            "type": { "type": "keyword" },
+            "name": { "type": "keyword" }
+          }
+        },
+        "metricset": {
+          "properties": {
+            "name": { "type": "keyword" }
+          }
+        },
+        "host": {
+          "properties": {
+            "name": { "type": "keyword" },
+            "ip": { "type": "ip" }
+          }
+        },
+        "filter_status": { "type": "keyword" },
+        "filter_processed_at": { "type": "date" },
+        "block_reasons": { "type": "keyword" },
+        "removed_fields": { "type": "keyword" },
+        "processed_by": { "type": "keyword" },
+        "pipeline": { "type": "keyword" },
+        "tags": { "type": "keyword" },
+        "message": { "type": "text" },
+        "test_marker": { "type": "keyword" }
+      }
+    }
+  }
+}
