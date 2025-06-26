@@ -1,15 +1,17 @@
 # Logstash Multiple Pipelines Configuration
 # Cấu hình nhiều pipeline để xử lý các loại dữ liệu khác nhau
 
-# Single unified pipeline for all inputs (Beats, TCP, HTTP)
+# Single unified pipeline for all inputs (Beats, TCP, HTTP) - Optimized for 256GB RAM
 - pipeline.id: main
   path.config: "/usr/share/logstash/pipeline/simple.conf"
-  pipeline.workers: 2
-  pipeline.batch.size: 500
-  pipeline.batch.delay: 50
-  queue.type: memory
-  queue.max_events: 2000
-  queue.max_bytes: 2gb
+  pipeline.workers: 10                    # Use all 10 CPU cores
+  pipeline.batch.size: 2000               # Larger batch size for efficiency
+  pipeline.batch.delay: 50                # Keep low latency
+  queue.type: persisted                   # Use persistent queue for reliability
+  queue.max_events: 50000                 # Large queue for high volume
+  queue.max_bytes: 10gb                   # 10GB queue size
+  queue.page_capacity: 64mb               # Larger page capacity
+  queue.checkpoint.writes: 1024           # Checkpoint frequency
 
 # Metricbeat pipeline - DISABLED (merged into main pipeline)
 # - pipeline.id: metricbeat-filtered

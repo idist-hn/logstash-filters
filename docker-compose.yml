@@ -21,7 +21,7 @@ services:
         hard: -1
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
-      - ./elk/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
     ports:
       - "${ES_PORT}:9200"
     networks:
@@ -39,7 +39,7 @@ services:
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     volumes:
-      - ./elk/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
     ports:
       - "${KIBANA_PORT}:5601"
     networks:
@@ -57,12 +57,15 @@ services:
     image: docker.elastic.co/logstash/logstash:${ELASTIC_VERSION}
     container_name: logstash
     environment:
-      - "LS_JAVA_OPTS=-Xmx1g -Xms1g"
+      - "LS_JAVA_OPTS=-Xmx32g -Xms32g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions"
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
       - ELASTICSEARCH_USERNAME=elastic
       - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
       - XPACK_MONITORING_ENABLED=false
       - LOGSTASH_INTERNAL_PASSWORD=${ELASTIC_PASSWORD}
+      - PIPELINE_WORKERS=10
+      - PIPELINE_BATCH_SIZE=2000
+      - PIPELINE_BATCH_DELAY=50
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
       - ./logstash/pipeline/databases.conf:/usr/share/logstash/pipeline/main.conf
@@ -79,6 +82,21 @@ services:
     depends_on:
       - elasticsearch
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 48G        # 48GB RAM limit for Logstash
+          cpus: '10'         # All 10 CPU cores
+        reservations:
+          memory: 32G        # Reserve 32GB RAM
+          cpus: '6'          # Reserve 6 CPU cores
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 262144
+        hard: 262144
 
   # Metricbeat
   metricbeat:

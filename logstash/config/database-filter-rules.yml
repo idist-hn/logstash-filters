@@ -183,17 +183,17 @@ content_filters:
 rate_limiting:
   enabled: true
   
-  # Per database instance
+  # Per database instance - High Volume Configuration
   per_instance:
-    max_events_per_minute: 6000  # 100 events per second
-    max_events_per_hour: 360000
-    
-  # Per metricset
+    max_events_per_minute: 120000  # 2000 events per second
+    max_events_per_hour: 7200000   # 7.2M events per hour
+
+  # Per metricset - Higher limits for 256GB server
   per_metricset:
-    status: 600      # 10 per second
-    performance: 600
-    database: 600
-    activity: 1200   # 20 per second (có thể có nhiều connections)
+    status: 6000         # 100 per second
+    performance: 6000    # 100 per second
+    database: 6000       # 100 per second
+    activity: 12000      # 200 per second (nhiều connections)
     
 # Alerting thresholds
 alerting:
@@ -228,9 +228,12 @@ elasticsearch:
     - "index"
     - "index_summary"
 
-# Performance settings
+# Performance settings - Optimized for 256GB RAM
 performance:
-  batch_size: 1000
-  batch_timeout: 5000  # ms
-  worker_threads: 2
-  max_memory_mb: 256
+  batch_size: 2000              # Larger batch size for efficiency
+  batch_timeout: 2000           # Faster processing (2s)
+  worker_threads: 32            # Match 32 CPU cores
+  max_memory_mb: 32000          # 32GB for filter processing
+  enable_caching: true          # Enable rule caching
+  cache_size: 100000            # Cache 100k filter rules
+  parallel_processing: true     # Enable parallel filter execution

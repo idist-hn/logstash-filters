@@ -1,0 +1,45 @@
+# Elasticsearch Configuration - Optimized for 256GB RAM Server
+cluster.name: "cloudwatch-cluster"
+node.name: "elasticsearch-node-1"
+
+# Network settings
+network.host: 0.0.0.0
+http.port: 9200
+transport.port: 9300
+
+# Discovery settings for single node
+discovery.type: single-node
+
+# Memory settings - Optimized for high RAM
+bootstrap.memory_lock: true
+
+# Security settings
+xpack.security.enabled: true
+xpack.security.enrollment.enabled: false
+xpack.security.http.ssl.enabled: false
+xpack.security.transport.ssl.enabled: false
+
+# Monitoring
+xpack.monitoring.collection.enabled: false
+
+# Performance settings for 256GB RAM
+indices.memory.index_buffer_size: 20%
+indices.memory.min_index_buffer_size: 2gb
+indices.fielddata.cache.size: 40%
+indices.queries.cache.size: 20%
+indices.requests.cache.size: 5%
+
+# Thread pool settings
+thread_pool.write.queue_size: 2000
+thread_pool.search.queue_size: 2000
+thread_pool.get.queue_size: 2000
+
+# Cluster settings
+cluster.routing.allocation.disk.threshold.enabled: true
+cluster.routing.allocation.disk.watermark.low: 85%
+cluster.routing.allocation.disk.watermark.high: 90%
+cluster.routing.allocation.disk.watermark.flood_stage: 95%
+
+# Index settings
+action.auto_create_index: true
+action.destructive_requires_name: false
