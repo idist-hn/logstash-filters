@@ -1,0 +1,224 @@
+# Logstash Filter Rules Configuration
+# Cấu hình các quy tắc filter cho việc ghi dữ liệu vào Elasticsearch
+
+# Global settings
+global:
+  enabled: true
+  default_action: "allow"  # allow | deny
+  log_filtered_events: true
+  
+# Metric filters - Kiểm soát các metrics được phép ghi
+metrics:
+  enabled: true
+  rules:
+    # CPU metrics
+    cpu:
+      enabled: true
+      min_value: 0
+      max_value: 100
+      required_fields: ["host", "timestamp"]
+      
+    # Memory metrics  
+    memory:
+      enabled: true
+      min_value: 0
+      max_value: 100
+      required_fields: ["host", "timestamp"]
+      
+    # Disk metrics
+    disk:
+      enabled: true
+      min_value: 0
+      max_value: 100
+      required_fields: ["host", "timestamp", "device"]
+      
+    # Network metrics
+    network:
+      enabled: true
+      min_bytes: 0
+      max_bytes: 10737418240  # 10GB
+      required_fields: ["host", "timestamp", "interface"]
+      
+    # Response time metrics
+    response_time:
+      enabled: true
+      min_value: 0
+      max_value: 30000  # 30 seconds in ms
+      required_fields: ["service", "endpoint", "timestamp"]
+
+# Log level filters
+log_levels:
+  enabled: true
+  allowed_levels:
+    - "DEBUG"
+    - "INFO" 
+    - "WARN"
+    - "ERROR"
+    - "FATAL"
+  blocked_levels: []
+  
+# Source filters - Kiểm soát theo nguồn dữ liệu
+sources:
+  enabled: true
+  rules:
+    # Application logs
+    applications:
+      enabled: true
+      allowed_apps:
+        - "api-gateway"
+        - "user-service"
+        - "payment-service"
+        - "notification-service"
+      blocked_apps:
+        - "test-app"
+        
+    # System logs
+    system:
+      enabled: true
+      allowed_hosts:
+        - "prod-server-01"
+        - "prod-server-02"
+        - "staging-server-01"
+      blocked_hosts:
+        - "dev-server"
+        
+    # Container logs
+    containers:
+      enabled: true
+      allowed_namespaces:
+        - "production"
+        - "staging"
+      blocked_namespaces:
+        - "development"
+        - "testing"
+
+# Content filters - Kiểm soát nội dung
+content:
+  enabled: true
+  rules:
+    # Sensitive data filtering
+    sensitive_data:
+      enabled: true
+      block_patterns:
+        - "password"
+        - "secret"
+        - "token"
+        - "api_key"
+        - "credit_card"
+        - "ssn"
+      mask_fields:
+        - "user_password"
+        - "api_token"
+        - "session_id"
+        
+    # Size limits
+    size_limits:
+      enabled: true
+      max_message_size: 65536  # 64KB
+      max_field_count: 1000
+      
+    # Required fields
+    required_fields:
+      enabled: true
+      mandatory_fields:
+        - "timestamp"
+        - "level"
+        - "message"
+
+# Rate limiting
+rate_limiting:
+  enabled: true
+  rules:
+    # Per source rate limiting
+    per_source:
+      enabled: true
+      max_events_per_minute: 1000
+      max_events_per_hour: 50000
+      
+    # Per log level rate limiting  
+    per_level:
+      enabled: true
+      error_max_per_minute: 100
+      warn_max_per_minute: 500
+      info_max_per_minute: 2000
+
+# Time-based filters
+time_filters:
+  enabled: true
+  rules:
+    # Business hours only
+    business_hours:
+      enabled: false
+      start_hour: 8
+      end_hour: 18
+      timezone: "Asia/Ho_Chi_Minh"
+      
+    # Exclude weekends
+    exclude_weekends:
+      enabled: false
+      
+    # Event age filtering
+    event_age:
+      enabled: true
+      max_age_hours: 24
+      min_age_seconds: 0
+
+# Index routing rules
+index_routing:
+  enabled: true
+  rules:
+    # Route by log level
+    by_level:
+      enabled: true
+      error_index: "logs-error"
+      warn_index: "logs-warning" 
+      info_index: "logs-info"
+      debug_index: "logs-debug"
+      
+    # Route by source
+    by_source:
+      enabled: true
+      application_index: "logs-application"
+      system_index: "logs-system"
+      security_index: "logs-security"
+      
+    # Route by date
+    by_date:
+      enabled: true
+      pattern: "logs-%{+YYYY.MM.dd}"
+
+# Alerting rules
+alerting:
+  enabled: true
+  rules:
+    # High error rate
+    high_error_rate:
+      enabled: true
+      threshold: 100  # errors per minute
+      window_minutes: 5
+      
+    # Blocked events
+    blocked_events:
+      enabled: true
+      threshold: 50   # blocked events per minute
+      window_minutes: 5
+      
+    # Missing required fields
+    missing_fields:
+      enabled: true
+      threshold: 10   # events with missing fields per minute
+      window_minutes: 5
+
+# Performance settings
+performance:
+  enabled: true
+  settings:
+    # Batch processing
+    batch_size: 1000
+    batch_timeout: 5000  # ms
+    
+    # Memory limits
+    max_memory_mb: 512
+    
+    # Processing threads
+    worker_threads: 4

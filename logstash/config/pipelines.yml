@@ -1,0 +1,36 @@
+# Logstash Multiple Pipelines Configuration
+# Cấu hình nhiều pipeline để xử lý các loại dữ liệu khác nhau
+
+# Single unified pipeline for all inputs (Beats, TCP, HTTP)
+- pipeline.id: main
+  path.config: "/usr/share/logstash/pipeline/simple.conf"
+  pipeline.workers: 2
+  pipeline.batch.size: 500
+  pipeline.batch.delay: 50
+  queue.type: memory
+  queue.max_events: 2000
+  queue.max_bytes: 2gb
+
+# Metricbeat pipeline - DISABLED (merged into main pipeline)
+# - pipeline.id: metricbeat-filtered
+#   path.config: "/usr/share/logstash/pipeline/metricbeat-filtered.conf"
+#   pipeline.workers: 2
+#   pipeline.batch.size: 500
+#   pipeline.batch.delay: 50
+#   queue.type: memory
+#   queue.max_events: 2000
+#   queue.max_bytes: 2gb
+  
+# Future: Filebeat pipeline (if needed)
+# - pipeline.id: filebeat
+#   path.config: "/usr/share/logstash/pipeline/filebeat.conf"
+#   pipeline.workers: 1
+#   pipeline.batch.size: 125
+#   pipeline.batch.delay: 50
+
+# Future: Security logs pipeline (if needed)  
+# - pipeline.id: security
+#   path.config: "/usr/share/logstash/pipeline/security.conf"
+#   pipeline.workers: 1
+#   pipeline.batch.size: 100
+#   pipeline.batch.delay: 25

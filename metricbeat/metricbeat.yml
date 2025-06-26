@@ -12,13 +12,8 @@ metricbeat.modules:
     - network
     - process
     - process_summary
-    - socket_summary
-    - entropy
     - core
     - diskio
-    - socket
-    - service
-    - users
   enabled: true
   period: 10s
   processes: ['.*']
@@ -74,6 +69,29 @@ metricbeat.modules:
   hosts: ["http://logstash:9600"]
   enabled: true
 
+# MySQL module (disabled - no MySQL server available)
+# - module: mysql
+#   metricsets:
+#     - status
+#     - galera_status
+#     - performance
+#   period: 10s
+#   hosts: ["tcp(mysql:3306)/"]
+#   username: "metricbeat"
+#   password: "metricbeat_password"
+#   enabled: false
+
+# PostgreSQL module (disabled - no PostgreSQL server available)
+# - module: postgresql
+#   metricsets:
+#     - database
+#     - bgwriter
+#     - activity
+#     - statement
+#   period: 10s
+#   hosts: ["postgres://postgres:postgres_password@postgresql:5432/postgres?sslmode=disable"]
+#   enabled: false
+
 # Processors
 processors:
   - add_host_metadata:
@@ -82,16 +100,20 @@ processors:
   - add_docker_metadata: ~
   - add_kubernetes_metadata: ~
 
-# Output configuration
-output.elasticsearch:
-  hosts: ["http://elasticsearch:9200"]
-  username: "elastic"
-  password: "${ELASTICSEARCH_PASSWORD}"
-  index: "metricbeat-%{[agent.version]}-%{+yyyy.MM.dd}"
-  template.settings:
-    index.number_of_shards: 1
-    index.number_of_replicas: 0
-    index.refresh_interval: 5s
+# Output configuration - Send to Logstash for filtering
+output.logstash:
+  hosts: ["logstash:5044"]
+
+# Alternative: Direct to Elasticsearch (disabled)
+# output.elasticsearch:
+#   hosts: ["http://elasticsearch:9200"]
+#   username: "elastic"
+#   password: "${ELASTICSEARCH_PASSWORD}"
+#   index: "metricbeat-%{[agent.version]}-%{+yyyy.MM.dd}"
+#   template.settings:
+#     index.number_of_shards: 1
+#     index.number_of_replicas: 0
+#     index.refresh_interval: 5s
 
 # Kibana configuration
 setup.kibana:

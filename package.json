@@ -1,9 +1,0 @@
-{
-  "dependencies": {
-    "@iconify/vue": "^5.0.0",
-    "lucide-vue-next": "^0.522.0"
-  },
-  "devDependencies": {
-    "sass-embedded": "^1.89.2"
-  }
-}

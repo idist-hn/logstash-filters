@@ -38,9 +38,6 @@ services:
     container_name: kibana
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
-      - KIBANA_SYSTEM_PASSWORD=${KIBANA_PASSWORD}
     volumes:
       - ./elk/kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
     ports:
@@ -48,8 +45,7 @@ services:
     networks:
       - elk-network
     depends_on:
-      elasticsearch:
-        condition: service_healthy
+      - elasticsearch
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:5601/api/status || exit 1"]
       interval: 30s
@@ -65,16 +61,24 @@ services:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
       - ELASTICSEARCH_USERNAME=elastic
       - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+      - XPACK_MONITORING_ENABLED=false
+      - LOGSTASH_INTERNAL_PASSWORD=${ELASTIC_PASSWORD}
     volumes:
-      - ./elk/logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
-      - ./elk/logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logstash/pipeline/simple.conf:/usr/share/logstash/pipeline/main.conf
+      - ./logstash/config:/usr/share/logstash/config-custom:ro
+      - ./logstash/data:/usr/share/logstash/data
+      - ./scripts:/usr/share/logstash/scripts:ro
     ports:
-      - "${LOGSTASH_PORT}:5044"
+      - "${LOGSTASH_PORT}:5044"  # Beats input
+      - "8090:8080"              # HTTP input for direct log submission
+      - "5001:5001"              # TCP input for application logs
+      - "514:514/udp"            # UDP input for syslog
     networks:
       - elk-network
     depends_on:
-      elasticsearch:
-        condition: service_healthy
+      - elasticsearch
+    restart: unless-stopped
 
   # Metricbeat
   metricbeat:
@@ -96,8 +100,8 @@ services:
     networks:
       - elk-network
     depends_on:
-      elasticsearch:
-        condition: service_healthy
+      - elasticsearch
+      - logstash
 
 volumes:
   elasticsearch_data:

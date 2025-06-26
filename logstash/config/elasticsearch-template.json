@@ -1,0 +1,165 @@
+{
+  "index_patterns": ["logs-*"],
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas": 0,
+    "index.refresh_interval": "5s",
+    "index.codec": "best_compression",
+    "index.mapping.total_fields.limit": 2000
+  },
+  "mappings": {
+    "properties": {
+      "@timestamp": {
+        "type": "date",
+        "format": "strict_date_optional_time||epoch_millis"
+      },
+      "timestamp": {
+        "type": "date",
+        "format": "strict_date_optional_time||epoch_millis"
+      },
+      "level": {
+        "type": "keyword",
+        "fields": {
+          "text": {
+            "type": "text"
+          }
+        }
+      },
+      "message": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "host": {
+        "type": "keyword",
+        "fields": {
+          "text": {
+            "type": "text"
+          }
+        }
+      },
+      "application": {
+        "type": "keyword",
+        "fields": {
+          "text": {
+            "type": "text"
+          }
+        }
+      },
+      "service": {
+        "type": "keyword"
+      },
+      "environment": {
+        "type": "keyword"
+      },
+      "type": {
+        "type": "keyword"
+      },
+      "metric_name": {
+        "type": "keyword"
+      },
+      "value": {
+        "type": "double"
+      },
+      "unit": {
+        "type": "keyword"
+      },
+      "tags": {
+        "type": "keyword"
+      },
+      "filter_passed": {
+        "type": "boolean"
+      },
+      "filter_reasons": {
+        "type": "keyword"
+      },
+      "source_ip": {
+        "type": "ip"
+      },
+      "user_id": {
+        "type": "keyword"
+      },
+      "session_id": {
+        "type": "keyword"
+      },
+      "request_id": {
+        "type": "keyword"
+      },
+      "response_time": {
+        "type": "long"
+      },
+      "status_code": {
+        "type": "integer"
+      },
+      "error_code": {
+        "type": "keyword"
+      },
+      "stack_trace": {
+        "type": "text",
+        "index": false
+      },
+      "cpu": {
+        "properties": {
+          "percent": {
+            "type": "float"
+          },
+          "cores": {
+            "type": "integer"
+          }
+        }
+      },
+      "memory": {
+        "properties": {
+          "percent": {
+            "type": "float"
+          },
+          "used_bytes": {
+            "type": "long"
+          },
+          "total_bytes": {
+            "type": "long"
+          }
+        }
+      },
+      "disk": {
+        "properties": {
+          "percent": {
+            "type": "float"
+          },
+          "used_bytes": {
+            "type": "long"
+          },
+          "total_bytes": {
+            "type": "long"
+          },
+          "device": {
+            "type": "keyword"
+          }
+        }
+      },
+      "network": {
+        "properties": {
+          "interface": {
+            "type": "keyword"
+          },
+          "bytes_in": {
+            "type": "long"
+          },
+          "bytes_out": {
+            "type": "long"
+          },
+          "packets_in": {
+            "type": "long"
+          },
+          "packets_out": {
+            "type": "long"
+          }
+        }
+      }
+    }
+  }
+}

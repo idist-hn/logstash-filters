@@ -1,0 +1,236 @@
+# Database Metrics Filter Rules
+# Cấu hình filter cho MySQL và PostgreSQL metrics từ Metricbeat
+
+# Global settings
+global:
+  enabled: true
+  default_action: "deny"  # WHITELIST MODE: deny by default, only allow explicitly allowed
+  log_filtered_events: true
+  debug_mode: false
+
+  # Blocked events routing
+  blocked_events:
+    send_to_separate_index: true
+    blocked_index_pattern: "blocked-metrics-%{+YYYY.MM.dd}"
+    include_block_reason: true
+
+# MySQL filter rules
+mysql:
+  enabled: true
+  
+  # Allowed metricsets
+  allowed_metricsets:
+    - "status"
+    - "galera_status" 
+    - "performance"
+    - "query"
+  
+  # Blocked metricsets (nếu có)
+  blocked_metricsets:
+    - "cpu"
+
+  # Field filtering
+  field_filters:
+    # Allowed fields - chỉ cho phép các field này
+    allowed_fields:
+      # Connection metrics
+      - "mysql.status.connections"
+      - "mysql.status.max_connections"
+      - "mysql.status.threads_connected"
+      - "mysql.status.threads_running"
+      
+      # Query metrics
+      - "mysql.status.queries"
+      - "mysql.status.questions"
+      - "mysql.status.slow_queries"
+      - "mysql.status.com_select"
+      - "mysql.status.com_insert"
+      - "mysql.status.com_update"
+      - "mysql.status.com_delete"
+      
+      # Buffer metrics
+      - "mysql.status.innodb_buffer_pool_pages_total"
+      - "mysql.status.innodb_buffer_pool_pages_free"
+      - "mysql.status.innodb_buffer_pool_pages_data"
+      
+      # Performance metrics
+      - "mysql.performance.events_statements_total"
+      - "mysql.performance.events_statements_current"
+      
+    # Blocked fields - không cho phép các field này
+    blocked_fields:
+      - "mysql.status.ssl_*"  # SSL info có thể nhạy cảm
+      - "mysql.status.rsa_*"  # RSA keys
+      - "*password*"          # Bất kỳ field nào chứa password
+      - "*secret*"            # Bất kỳ field nào chứa secret
+      - "*key*"               # Bất kỳ field nào chứa key
+      
+  # Value limits
+  value_limits:
+    connections:
+      min: 0
+      max: 10000
+    queries_per_second:
+      min: 0
+      max: 100000
+    buffer_pool_size:
+      min: 0
+      max: 68719476736  # 64GB
+      
+  # Required fields
+  required_fields:
+    - "@timestamp"
+    - "host.name"
+    - "service.type"
+    - "metricset.name"
+
+# PostgreSQL filter rules  
+postgresql:
+  enabled: true
+  
+  # Allowed metricsets
+  allowed_metricsets:
+    - "database"
+    - "bgwriter"
+    - "activity"
+    - "statement"
+    
+  # Blocked metricsets
+  blocked_metricsets: []
+  
+  # Field filtering
+  field_filters:
+    # Allowed fields
+    allowed_fields:
+      # Database metrics
+      - "postgresql.database.name"
+      - "postgresql.database.number_of_backends"
+      - "postgresql.database.transactions.commit"
+      - "postgresql.database.transactions.rollback"
+      - "postgresql.database.blocks.read"
+      - "postgresql.database.blocks.hit"
+      - "postgresql.database.rows.returned"
+      - "postgresql.database.rows.fetched"
+      - "postgresql.database.rows.inserted"
+      - "postgresql.database.rows.updated"
+      - "postgresql.database.rows.deleted"
+      
+      # Background writer metrics
+      - "postgresql.bgwriter.checkpoints.scheduled"
+      - "postgresql.bgwriter.checkpoints.requested"
+      - "postgresql.bgwriter.buffers.checkpoint"
+      - "postgresql.bgwriter.buffers.clean"
+      - "postgresql.bgwriter.buffers.backend"
+      
+      # Activity metrics
+      - "postgresql.activity.database.name"
+      - "postgresql.activity.pid"
+      - "postgresql.activity.user.name"
+      - "postgresql.activity.application_name"
+      - "postgresql.activity.client.address"
+      - "postgresql.activity.state"
+      - "postgresql.activity.query"
+      - "postgresql.activity.waiting"
+      
+    # Blocked fields
+    blocked_fields:
+      - "*password*"
+      - "*secret*"
+      - "*key*"
+      - "*token*"
+      - "postgresql.activity.query"  # Có thể chứa sensitive data
+      
+  # Value limits
+  value_limits:
+    connections:
+      min: 0
+      max: 1000
+    transactions_per_second:
+      min: 0
+      max: 50000
+    buffer_size:
+      min: 0
+      max: 34359738368  # 32GB
+      
+  # Required fields
+  required_fields:
+    - "@timestamp"
+    - "host.name"
+    - "service.type"
+    - "metricset.name"
+
+# Content filtering
+content_filters:
+  enabled: true
+  
+  # Sensitive data patterns
+  sensitive_patterns:
+    - "(?i)password\\s*[=:]\\s*['\"]?[^\\s'\"]+['\"]?"
+    - "(?i)secret\\s*[=:]\\s*['\"]?[^\\s'\"]+['\"]?"
+    - "(?i)token\\s*[=:]\\s*['\"]?[^\\s'\"]+['\"]?"
+    - "(?i)api[_-]?key\\s*[=:]\\s*['\"]?[^\\s'\"]+['\"]?"
+    - "\\b[0-9]{4}[\\s-]?[0-9]{4}[\\s-]?[0-9]{4}[\\s-]?[0-9]{4}\\b"  # Credit card
+    - "\\b[0-9]{3}-[0-9]{2}-[0-9]{4}\\b"  # SSN
+    
+  # SQL injection patterns
+  sql_injection_patterns:
+    - "(?i)(union|select|insert|update|delete|drop|create|alter)\\s+"
+    - "(?i)(or|and)\\s+['\"]?1['\"]?\\s*[=]\\s*['\"]?1['\"]?"
+    - "(?i)(--|#|/\\*)"
+    - "(?i)(exec|execute|sp_|xp_)"
+
+# Rate limiting
+rate_limiting:
+  enabled: true
+  
+  # Per database instance
+  per_instance:
+    max_events_per_minute: 6000  # 100 events per second
+    max_events_per_hour: 360000
+    
+  # Per metricset
+  per_metricset:
+    status: 600      # 10 per second
+    performance: 600
+    database: 600
+    activity: 1200   # 20 per second (có thể có nhiều connections)
+    
+# Alerting thresholds
+alerting:
+  enabled: true
+  
+  # High connection count
+  high_connections:
+    mysql_threshold: 8000
+    postgresql_threshold: 800
+    
+  # High query rate
+  high_query_rate:
+    mysql_threshold: 80000
+    postgresql_threshold: 40000
+    
+  # Blocked events
+  blocked_events_threshold: 100  # per minute
+
+# Elasticsearch filter rules (nếu cần filter Elasticsearch metrics)
+elasticsearch:
+  enabled: true
+
+  # Blocked metricsets
+  blocked_metricsets:
+    - "shard"           # Block shard metricset
+    - "index_recovery"  # Block index recovery nếu cần
+
+  # Allowed metricsets
+  allowed_metricsets:
+    - "node"
+    - "cluster_stats"
+    - "index"
+    - "index_summary"
+
+# Performance settings
+performance:
+  batch_size: 1000
+  batch_timeout: 5000  # ms
+  worker_threads: 2
+  max_memory_mb: 256
