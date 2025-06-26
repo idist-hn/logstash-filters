@@ -65,7 +65,7 @@ services:
       - LOGSTASH_INTERNAL_PASSWORD=${ELASTIC_PASSWORD}
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
-      - ./logstash/pipeline/simple.conf:/usr/share/logstash/pipeline/main.conf
+      - ./logstash/pipeline/databases.conf:/usr/share/logstash/pipeline/main.conf
       - ./logstash/config:/usr/share/logstash/config-custom:ro
       - ./logstash/data:/usr/share/logstash/data
       - ./scripts:/usr/share/logstash/scripts:ro

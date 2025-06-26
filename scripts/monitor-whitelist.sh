@@ -17,23 +17,23 @@ echo -e "${BLUE}📊 Current Indices:${NC}"
 curl -s -X GET "http://localhost:9200/_cat/indices?v" -u "elastic:changeme123" | grep -E "(blocked|cloudwatch|metricbeat)"
 echo ""
 
-echo -e "${GREEN}✅ Allowed Events (cloudwatch-logs):${NC}"
-allowed_count=$(curl -s -X GET "http://localhost:9200/cloudwatch-logs-*/_count" -u "elastic:changeme123" | jq '.count')
+echo -e "${GREEN}✅ Allowed Events (metricbeat-filtered):${NC}"
+allowed_count=$(curl -s -X GET "http://localhost:9200/metricbeat-filtered-*/_count" -u "elastic:changeme123" | jq '.count')
 echo "   Total allowed events: $allowed_count"
 
-echo -e "${RED}🚫 Blocked Events (blocked-metrics):${NC}"
-blocked_count=$(curl -s -X GET "http://localhost:9200/blocked-metrics-*/_count" -u "elastic:changeme123" | jq '.count')
+echo -e "${RED}🚫 Blocked Events (block-metric):${NC}"
+blocked_count=$(curl -s -X GET "http://localhost:9200/block-metric-*/_count" -u "elastic:changeme123" | jq '.count')
 echo "   Total blocked events: $blocked_count"
 
 echo ""
 echo -e "${YELLOW}🔍 Recent Blocked Events (Top 5):${NC}"
-curl -s -X GET "http://localhost:9200/blocked-metrics-*/_search?size=5&sort=@timestamp:desc" -u "elastic:changeme123" | jq -r '.hits.hits[]._source | "\(.["@timestamp"]) - \(.service.type) - \(.metricset.name) - Reasons: \(.block_reasons | join(", "))"' | while read line; do
+curl -s -X GET "http://localhost:9200/block-metric-*/_search?size=5&sort=@timestamp:desc" -u "elastic:changeme123" | jq -r '.hits.hits[]._source | "\(.["@timestamp"]) - \(.service.type) - \(.metricset.name) - Reasons: \(.block_reasons | join(", "))"' | while read line; do
     echo -e "   ${RED}🚫 $line${NC}"
 done
 
 echo ""
 echo -e "${GREEN}✅ Recent Allowed Events (Top 3):${NC}"
-curl -s -X GET "http://localhost:9200/cloudwatch-logs-*/_search?size=3&sort=@timestamp:desc" -u "elastic:changeme123" | jq -r '.hits.hits[]._source | "\(.["@timestamp"]) - \(.service.type // "unknown") - \(.metricset.name // "unknown") - Status: \(.filter_status // "none")"' 2>/dev/null | while read line; do
+curl -s -X GET "http://localhost:9200/metricbeat-filtered-*/_search?size=3&sort=@timestamp:desc" -u "elastic:changeme123" | jq -r '.hits.hits[]._source | "\(.["@timestamp"]) - \(.service.type // "unknown") - \(.metricset.name // "unknown") - Status: \(.filter_status // "none")"' 2>/dev/null | while read line; do
     echo -e "   ${GREEN}✅ $line${NC}"
 done
 
@@ -43,7 +43,7 @@ docker logs logstash --tail 20 | grep -E "filter_stats" | tail -1 | grep -o '"bl
 
 echo ""
 echo -e "${YELLOW}🔧 Block Reasons Analysis:${NC}"
-curl -s -X GET "http://localhost:9200/blocked-metrics-*/_search" -u "elastic:changeme123" -H "Content-Type: application/json" -d '{
+curl -s -X GET "http://localhost:9200/block-metric-*/_search" -u "elastic:changeme123" -H "Content-Type: application/json" -d '{
   "size": 0,
   "aggs": {
     "block_reasons": {
@@ -62,4 +62,5 @@ echo "   - Allowed MySQL metricsets: status, galera_status, performance"
 echo "   - Allowed PostgreSQL metricsets: database, bgwriter, activity"
 echo "   - Allowed Elasticsearch metricsets: node, cluster_stats, index"
 echo "   - Unknown services: BLOCKED"
-echo "   - Blocked events sent to: blocked-metrics-* index"
+echo "   - Blocked events sent to: block-metric-* index
+   - Allowed events sent to: metricbeat-filtered-* index"

@@ -218,12 +218,12 @@ elasticsearch:
 
   # Blocked metricsets
   blocked_metricsets:
-    - "shard"           # Block shard metricset
-    - "index_recovery"  # Block index recovery nếu cần
+    - "shard"
+    - "index_recovery"
+    - "node"
 
   # Allowed metricsets
   allowed_metricsets:
-    - "node"
     - "cluster_stats"
     - "index"
     - "index_summary"
