@@ -54,7 +54,7 @@ services:
 
   # Logstash
   logstash:
-    image: docker.elastic.co/logstash/logstash:${ELASTIC_VERSION}
+    image: docker.elastic.co/logstash/logstash:8.13.2
     container_name: logstash
     environment:
       - "LS_JAVA_OPTS=-Xmx32g -Xms32g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions"

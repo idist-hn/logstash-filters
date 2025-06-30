@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  # Logstash (Bitnami)
+  logstash:
+    image: bitnami/logstash:8.13.2
+    container_name: logstash
+    environment:
+      - "LS_JAVA_OPTS=-Xmx32g -Xms32g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions"
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+      - XPACK_MONITORING_ENABLED=false
+      - LOGSTASH_INTERNAL_PASSWORD=${ELASTIC_PASSWORD}
+      - PIPELINE_WORKERS=10
+      - PIPELINE_BATCH_SIZE=2000
+      - PIPELINE_BATCH_DELAY=50
+      # Bitnami specific environment variables
+      - LOGSTASH_CONF_FILENAME=main.conf
+      - LOGSTASH_ENABLE_MULTIPLE_PIPELINES=yes
+    volumes:
+      # Bitnami Logstash uses different paths
+      - ./logstash/config/logstash.yml:/opt/bitnami/logstash/config/logstash.yml
+      - ./logstash/pipeline/databases.conf:/opt/bitnami/logstash/pipeline/main.conf
+      - ./logstash/config:/opt/bitnami/logstash/config-custom:ro
+      - ./logstash/data:/opt/bitnami/logstash/data
+      - ./scripts:/opt/bitnami/logstash/scripts:ro
+    ports:
+      - "${LOGSTASH_PORT}:5044"  # Beats input
+      - "8090:8080"              # HTTP input for direct log submission
+      - "5001:5001"              # TCP input for application logs
+      - "514:514/udp"            # UDP input for syslog
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 48G        # 48GB RAM limit for Logstash
+          cpus: '10'         # All 10 CPU cores
+        reservations:
+          memory: 32G        # Reserve 32GB RAM
+          cpus: '6'          # Reserve 6 CPU cores
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 262144
+        hard: 262144
