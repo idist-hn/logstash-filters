@@ -190,6 +190,193 @@ postgresql:
     - "service.type"
     - "metricset.name"
 
+# System filter rules (CPU, Memory, Disk, Network metrics)
+system:
+  enabled: true
+
+  # Allowed metricsets
+  allowed_metricsets:
+    - "cpu"
+    - "memory"
+    - "load"
+    - "diskio"
+    - "filesystem"
+    - "network"
+    - "process"
+    - "process_summary"
+    - "socket_summary"
+    - "uptime"
+
+  # Blocked metricsets
+  blocked_metricsets:
+    - "users"           # User info (privacy)
+    - "service"         # Service details (security)
+
+  # Field filtering
+  field_filters:
+    # Allowed fields
+    allowed_fields:
+      # CPU metrics
+      - "system.cpu.total.pct"
+      - "system.cpu.user.pct"
+      - "system.cpu.system.pct"
+      - "system.cpu.idle.pct"
+      - "system.cpu.iowait.pct"
+      - "system.cpu.cores"
+
+      # Memory metrics
+      - "system.memory.total"
+      - "system.memory.used.bytes"
+      - "system.memory.used.pct"
+      - "system.memory.free"
+      - "system.memory.available"
+      - "system.memory.cached"
+      - "system.memory.swap.total"
+      - "system.memory.swap.used.bytes"
+      - "system.memory.swap.used.pct"
+      - "system.memory.swap.free"
+
+      # Load metrics
+      - "system.load.1"
+      - "system.load.5"
+      - "system.load.15"
+      - "system.load.cores"
+
+      # Disk I/O metrics
+      - "system.diskio.read.bytes"
+      - "system.diskio.write.bytes"
+      - "system.diskio.read.count"
+      - "system.diskio.write.count"
+      - "system.diskio.read.time"
+      - "system.diskio.write.time"
+      - "system.diskio.io.time"
+
+      # Filesystem metrics
+      - "system.filesystem.total"
+      - "system.filesystem.used.bytes"
+      - "system.filesystem.used.pct"
+      - "system.filesystem.free"
+      - "system.filesystem.available"
+      - "system.filesystem.files"
+      - "system.filesystem.free_files"
+
+      # Network metrics
+      - "system.network.in.bytes"
+      - "system.network.out.bytes"
+      - "system.network.in.packets"
+      - "system.network.out.packets"
+      - "system.network.in.errors"
+      - "system.network.out.errors"
+      - "system.network.in.dropped"
+      - "system.network.out.dropped"
+
+      # Process metrics
+      - "system.process.cpu.total.pct"
+      - "system.process.memory.size"
+      - "system.process.memory.rss.bytes"
+      - "system.process.memory.rss.pct"
+      - "system.process.state"
+      - "system.process.num_threads"
+
+      # Process summary
+      - "system.process.summary.total"
+      - "system.process.summary.running"
+      - "system.process.summary.sleeping"
+      - "system.process.summary.stopped"
+      - "system.process.summary.zombie"
+      - "system.process.summary.idle"
+
+      # Socket summary
+      - "system.socket.summary.tcp.all.count"
+      - "system.socket.summary.tcp.listening"
+      - "system.socket.summary.tcp.established"
+      - "system.socket.summary.udp.all.count"
+
+      # Uptime
+      - "system.uptime.duration.ms"
+
+    # Blocked fields
+    blocked_fields:
+      - "system.process.cmdline"              # Command lines (privacy/security)
+      - "system.process.env"                  # Environment variables (security)
+      - "system.process.cwd"                  # Working directory (privacy)
+      - "system.process.exe"                  # Executable path (security)
+      - "system.process.args"                 # Process arguments (security)
+      - "system.process.username"             # Process username (privacy)
+      - "system.process.pgid"                 # Process group ID (privacy)
+      - "system.filesystem.mount_point"       # Mount points (security)
+      - "system.filesystem.device_name"       # Device names (security)
+      - "system.network.name"                 # Network interface names (privacy)
+      - "system.diskio.name"                  # Disk device names (security)
+      - "system.*password*"                   # Password fields
+      - "system.*secret*"                     # Secret fields
+      - "system.*key*"                        # Key fields
+      - "system.*token*"                      # Token fields
+      - "system.*credential*"                 # Credential fields
+      - "system.*user*"                       # User info (privacy)
+      - "system.*hostname*"                   # Hostname (privacy)
+      - "system.*address*"                    # IP addresses (privacy)
+
+  # Value limits
+  value_limits:
+    cpu_percent:
+      min: 0
+      max: 100
+    memory_percent:
+      min: 0
+      max: 100
+    disk_percent:
+      min: 0
+      max: 100
+    load_average:
+      min: 0
+      max: 1000
+
+  # Required fields
+  required_fields:
+    - "@timestamp"
+    - "host.name"
+    - "service.type"
+    - "metricset.name"
+
+# Elasticsearch filter rules (nếu cần filter Elasticsearch metrics)
+elasticsearch:
+  enabled: true
+
+  # Allowed metricsets
+  allowed_metricsets:
+    - "cluster_stats"
+    - "index"
+    - "index_summary"
+    - "node_stats"
+    - "ml_job"
+
+  # Blocked metricsets
+  blocked_metricsets:
+    - "shard"
+    - "index_recovery"
+    - "node"
+
+  # Field filtering
+  field_filters:
+    # Blocked fields
+    blocked_fields:
+      - "elasticsearch.cluster.*password*"     # Password fields
+      - "elasticsearch.cluster.*secret*"       # Secret fields
+      - "elasticsearch.cluster.*key*"          # Key fields
+      - "elasticsearch.node.*password*"        # Node password fields
+      - "elasticsearch.node.*secret*"          # Node secret fields
+      - "elasticsearch.node.*key*"             # Node key fields
+      - "elasticsearch.node.host.ip"           # IP addresses (privacy)
+      - "elasticsearch.node.transport.address" # Transport addresses (privacy)
+      - "elasticsearch.node.http.publish_address" # HTTP addresses (privacy)
+      - "elasticsearch.index.*user*"           # User info (privacy)
+      - "elasticsearch.index.*query*"          # Query info (privacy)
+      - "elasticsearch.*version*"              # Version info (security)
+      - "elasticsearch.*hostname*"             # Hostname (privacy)
+      - "elasticsearch.*address*"              # IP addresses (privacy)
+      - "elasticsearch.index.name"             # Index names (privacy)
+
 # Content filtering
 content_filters:
   enabled: true
@@ -242,46 +429,6 @@ alerting:
     
   # Blocked events
   blocked_events_threshold: 100  # per minute
-
-# Elasticsearch filter rules (nếu cần filter Elasticsearch metrics)
-elasticsearch:
-  enabled: true
-
-  # Allowed metricsets
-  allowed_metricsets:
-    - "cluster_stats"
-    - "index"
-    - "index_summary"
-    - "node_stats"
-    - "ml_job"
-
-  # Blocked metricsets
-  blocked_metricsets:
-    - "shard"
-    - "index_recovery"
-    - "node"
-
-  # Field filtering
-  field_filters:
-    # Blocked fields
-    blocked_fields:
-      - "elasticsearch.cluster.*password*"     # Password fields
-      - "elasticsearch.cluster.*secret*"       # Secret fields
-      - "elasticsearch.cluster.*key*"          # Key fields
-      - "elasticsearch.node.*password*"        # Node password fields
-      - "elasticsearch.node.*secret*"          # Node secret fields
-      - "elasticsearch.node.*key*"             # Node key fields
-      - "elasticsearch.node.host.ip"           # IP addresses (privacy)
-      - "elasticsearch.node.transport.address" # Transport addresses (privacy)
-      - "elasticsearch.node.http.publish_address" # HTTP addresses (privacy)
-      - "elasticsearch.index.*user*"           # User info (privacy)
-      - "elasticsearch.index.*query*"          # Query info (privacy)
-      - "elasticsearch.*version*"              # Version info (security)
-      - "elasticsearch.*hostname*"             # Hostname (privacy)
-      - "elasticsearch.*address*"              # IP addresses (privacy)
-      - "elasticsearch.index.name"             # Index names (privacy)
-
-
 
 # Performance settings - Optimized for 256GB RAM
 performance:

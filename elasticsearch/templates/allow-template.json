@@ -122,6 +122,205 @@
             }
           }
         },
+        "system": {
+          "properties": {
+            "cpu": {
+              "properties": {
+                "total": {
+                  "properties": {
+                    "pct": { "type": "float" }
+                  }
+                },
+                "user": {
+                  "properties": {
+                    "pct": { "type": "float" }
+                  }
+                },
+                "system": {
+                  "properties": {
+                    "pct": { "type": "float" }
+                  }
+                },
+                "idle": {
+                  "properties": {
+                    "pct": { "type": "float" }
+                  }
+                },
+                "iowait": {
+                  "properties": {
+                    "pct": { "type": "float" }
+                  }
+                },
+                "cores": { "type": "long" }
+              }
+            },
+            "memory": {
+              "properties": {
+                "total": { "type": "long" },
+                "used": {
+                  "properties": {
+                    "bytes": { "type": "long" },
+                    "pct": { "type": "float" }
+                  }
+                },
+                "free": { "type": "long" },
+                "available": { "type": "long" },
+                "cached": { "type": "long" },
+                "swap": {
+                  "properties": {
+                    "total": { "type": "long" },
+                    "used": {
+                      "properties": {
+                        "bytes": { "type": "long" },
+                        "pct": { "type": "float" }
+                      }
+                    },
+                    "free": { "type": "long" }
+                  }
+                }
+              }
+            },
+            "load": {
+              "properties": {
+                "1": { "type": "float" },
+                "5": { "type": "float" },
+                "15": { "type": "float" },
+                "cores": { "type": "long" }
+              }
+            },
+            "diskio": {
+              "properties": {
+                "read": {
+                  "properties": {
+                    "bytes": { "type": "long" },
+                    "count": { "type": "long" },
+                    "time": { "type": "long" }
+                  }
+                },
+                "write": {
+                  "properties": {
+                    "bytes": { "type": "long" },
+                    "count": { "type": "long" },
+                    "time": { "type": "long" }
+                  }
+                },
+                "io": {
+                  "properties": {
+                    "time": { "type": "long" }
+                  }
+                }
+              }
+            },
+            "filesystem": {
+              "properties": {
+                "total": { "type": "long" },
+                "used": {
+                  "properties": {
+                    "bytes": { "type": "long" },
+                    "pct": { "type": "float" }
+                  }
+                },
+                "free": { "type": "long" },
+                "available": { "type": "long" },
+                "files": { "type": "long" },
+                "free_files": { "type": "long" }
+              }
+            },
+            "network": {
+              "properties": {
+                "in": {
+                  "properties": {
+                    "bytes": { "type": "long" },
+                    "packets": { "type": "long" },
+                    "errors": { "type": "long" },
+                    "dropped": { "type": "long" }
+                  }
+                },
+                "out": {
+                  "properties": {
+                    "bytes": { "type": "long" },
+                    "packets": { "type": "long" },
+                    "errors": { "type": "long" },
+                    "dropped": { "type": "long" }
+                  }
+                }
+              }
+            },
+            "process": {
+              "properties": {
+                "cpu": {
+                  "properties": {
+                    "total": {
+                      "properties": {
+                        "pct": { "type": "float" }
+                      }
+                    }
+                  }
+                },
+                "memory": {
+                  "properties": {
+                    "size": { "type": "long" },
+                    "rss": {
+                      "properties": {
+                        "bytes": { "type": "long" },
+                        "pct": { "type": "float" }
+                      }
+                    }
+                  }
+                },
+                "state": { "type": "keyword" },
+                "num_threads": { "type": "long" },
+                "summary": {
+                  "properties": {
+                    "total": { "type": "long" },
+                    "running": { "type": "long" },
+                    "sleeping": { "type": "long" },
+                    "stopped": { "type": "long" },
+                    "zombie": { "type": "long" },
+                    "idle": { "type": "long" }
+                  }
+                }
+              }
+            },
+            "socket": {
+              "properties": {
+                "summary": {
+                  "properties": {
+                    "tcp": {
+                      "properties": {
+                        "all": {
+                          "properties": {
+                            "count": { "type": "long" }
+                          }
+                        },
+                        "listening": { "type": "long" },
+                        "established": { "type": "long" }
+                      }
+                    },
+                    "udp": {
+                      "properties": {
+                        "all": {
+                          "properties": {
+                            "count": { "type": "long" }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "uptime": {
+              "properties": {
+                "duration": {
+                  "properties": {
+                    "ms": { "type": "long" }
+                  }
+                }
+              }
+            }
+          }
+        },
         "filter_status": { "type": "keyword" },
         "filter_processed_at": { "type": "date" },
         "removed_fields": { "type": "keyword" },
