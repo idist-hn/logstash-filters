@@ -15,9 +15,6 @@
       }
     },
     "mappings": {
-      "_size": {
-        "enabled": true
-      },
       "properties": {
         "@timestamp": {
           "type": "date",
